@@ -1,0 +1,89 @@
+
+.args {
+  .ant-radio-group {
+    margin: 10px 0 20px 0;
+  }
+  .ant-collapse-content-box {
+    text-align: left;
+  }
+
+  .ant-collapse {
+    width: 90%;
+    margin: 0 auto;
+    .ant-collapse-item {
+      background: #f7f7f7;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      border: 1px solid gray;
+      &.ant-collapse-item-active {
+        .ant-collapse-header {
+          color: #087DE9;
+        }
+      }
+      .ant-collapse-header {
+        outline: none;
+        text-align: left;
+        //font-size: 18px;
+        font-weight: bold;
+        &:focus {
+          outline: none;
+        }
+      }
+      .ant-collapse-content {
+        border-top: 1px solid gray;
+      }
+    }
+  }
+
+  .args-item {
+    text-align: left;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    .ant-input-number {
+      width: 100px;
+    }
+    .args-item-name {
+      margin: 0;
+      font-weight: bold;
+    }
+    .args-item-values {
+      margin: 0 18px;
+      & > div {
+        display: inline-block;
+        margin: 0 10px;
+        span {
+          margin-right: 8px;
+        }
+        .ant-input-number-handler > span {
+          margin-right: 0;
+        }
+      }
+    }
+    .args-item-value {
+      margin: 0 18px;
+    }
+    .args-unit {
+      font-weight: bold;
+    }
+  }
+
+  .mkconfig-item {
+    display: inline-block;
+    margin-right: 30px;
+  }
+
+  .mainlist-item {
+    &.shapemode, &.drawmode {
+      & > span {
+        //display: inline-block;
+        margin-right: 20px;
+      }
+      .ant-tag-checkable {
+        margin-left: 20px;
+        font-size: 14px;
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  user-select: none;
+}
+
+.model, .args, .trans, .conf, .about {
+  margin-top: 90px;
+  text-align: center;
+  display: none;
+  &.active {
+    display: block;
+  }
+}
