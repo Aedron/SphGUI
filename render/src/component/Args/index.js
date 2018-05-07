@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Collapse, Radio, Tag, InputNumber } from 'antd';
 
-import { loadTemplate } from './utils';
+import { loadTemplate, genXML } from './utils';
 import { withStore } from '../../store';
 
 import "./index.scss";
@@ -105,6 +105,7 @@ class Args extends Component {
 
   render() {
     const { state, props: { store } } = this;
+    console.log(genXML(state));
 
     return (
       <div className={`args ${store.view === 'args' ? 'active' : ''}`}>
