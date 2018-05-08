@@ -2,6 +2,8 @@
 const typesMap = {
   LINE: 'line',
   TRIANGLES: 'triangles',
+  QUADRI: 'quadri',
+  STRIP: 'strip',
   PYRAMID: 'pyramid',
   BOX: 'box',
   SPHERE: 'sphere',

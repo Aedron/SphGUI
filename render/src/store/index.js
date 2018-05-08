@@ -69,6 +69,43 @@ class Store {
   onChangeLinePoint = (index, i, j, v) => {
     this.mainList[index].points[i][j] = v;
   };
+  // Triangle
+  onAddTriangle = () => {
+    const line = {
+      type: typesMap.TRIANGLES,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    };
+    this.mainList.push(line);
+  };
+  onChangeTriangleType = (index, e) => {
+    const { value } = e.target;
+    const data = this.mainList[index];
+    if (value === data.type) return;
+
+    const [a, b, c, d] = data.points;
+    if (value === typesMap.TRIANGLES) {
+      data.points = [a, b, c];
+    } else {
+      data.points = [a, b, c, d || [0, 0, 0]];
+    }
+    data.type = value;
+  };
+  onDeleteTrianglePoint = (index, i) => {
+    const { points } = this.mainList[index];
+    if (points.length <= 4) {
+      return message.warning('至少包含四个点');
+    }
+    points.splice(i, 1);
+  };
+
   // 删除物件
   onDeleteObject = (index) => {
     this.mainList.splice(index, 1);

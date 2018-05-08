@@ -7,6 +7,7 @@ import {
 } from 'antd';
 
 import Line from './Line';
+import Triangle from './Triangle';
 
 import { loadTemplate, genXML } from './utils';
 import { data } from '../../utils';
@@ -83,11 +84,14 @@ class Args extends Component {
   onToggleShowAdd = () => this.setState({ showAdd: !this.state.showAdd });
   renderMainList = (o, index) => {
     const { type } = o;
+    let Component;
     switch (type) {
-      case typesMap.LINE: return (
-        <Line key={index} index={index} />
-      );
+      case typesMap.LINE: Component = Line; break;
+      case typesMap.TRIANGLES: Component = Triangle; break;
+      case typesMap.QUADRI: Component = Triangle; break;
+      case typesMap.STRIP: Component = Triangle; break;
     }
+    return <Component key={index} index={index} />
   };
 
   render() {
@@ -244,7 +248,7 @@ class Args extends Component {
               >取消</Button>
               <Button icon="folder-open">导入</Button>
               <Button onClick={store.onAddLine}>线</Button>
-              <Button>三角</Button>
+              <Button onClick={store.onAddTriangle}>三角</Button>
               <Button>棱锥</Button>
               <Button>棱柱</Button>
               <Button>立方体</Button>
