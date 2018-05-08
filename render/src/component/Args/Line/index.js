@@ -30,7 +30,7 @@ class Line extends Component {
               value={v}
               className="small-input"
               size="small"
-              onChange={store.onChangeLinePoint.bind(store, index, i, j)}
+              onChange={store.onChangePoint.bind(store, index, i, j)}
           />
           ])
         }
@@ -39,7 +39,7 @@ class Line extends Component {
           shape="circle"
           icon="close"
           size="small"
-          onClick={store.onDeleteLinePoint.bind(store, index, i)}
+          onClick={store.onDeletePoint.bind(store, index, i, 2)}
         />
       </div>
     );
@@ -62,7 +62,7 @@ class Line extends Component {
             <div>
               <Button
                 icon="plus"
-                onClick={store.onAddLinePoint.bind(store, index)}
+                onClick={store.onAddPoint.bind(store, index)}
               >添加点</Button>
             </div>
           </div>

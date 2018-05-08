@@ -56,19 +56,6 @@ class Store {
     };
     this.mainList.push(line);
   };
-  onAddLinePoint = (index) => {
-    this.mainList[index].points.push([0, 0, 0]);
-  };
-  onDeleteLinePoint = (index, i) => {
-    const { points } = this.mainList[index];
-    if (points.length <= 2) {
-      return message.warning('至少包含两个点');
-    }
-    points.splice(i, 1);
-  };
-  onChangeLinePoint = (index, i, j, v) => {
-    this.mainList[index].points[i][j] = v;
-  };
   // Triangle
   onAddTriangle = () => {
     const line = {
@@ -98,12 +85,37 @@ class Store {
     }
     data.type = value;
   };
-  onDeleteTrianglePoint = (index, i) => {
-    const { points } = this.mainList[index];
-    if (points.length <= 4) {
-      return message.warning('至少包含四个点');
-    }
-    points.splice(i, 1);
+  // Pyramid
+  onAddPyramid = () => {
+    const line = {
+      type: typesMap.PYRAMID,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    };
+    this.mainList.push(line);
+  };
+  // Prism
+  onAddPrism = () => {
+    const line = {
+      type: typesMap.PRISM,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    };
+    this.mainList.push(line);
   };
 
   // 删除物件
@@ -152,7 +164,24 @@ class Store {
   onChangeTransformRotate = (index, i, value) => {
     const { transform } = this.mainList[index];
     transform.rotate[i] = value;
-  }
+  };
+  // 添加/删除/编辑点
+  onAddPoint = (index, point) => {
+    if (!Array.isArray(point)) point=[0, 0, 0];
+    this.mainList[index].points.push(point);
+  };
+  onDeletePoint = (index, i, min) => {
+    if (typeof min !== 'number') min = 2;
+    const { points } = this.mainList[index];
+    if (points.length <= min) {
+      return message.warning('至少包含两个点');
+    }
+    points.splice(i, 1);
+  };
+  onChangePoint = (index, i, j, v) => {
+    if (typeof v === 'object') v = v.target.value;
+    this.mainList[index].points[i][j] = v;
+  };
 }
 
 
