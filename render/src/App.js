@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import { message } from 'antd';
 
 import Nav from './component/Nav';
 import Model from './component/Model';
@@ -12,20 +13,24 @@ import About from './component/About';
 import "./style/index.scss";
 
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Nav />
-        <Model />
-        <Args />
-        <Trans />
-        <Conf />
-        <About />
-      </div>
-    );
-  }
+function App() {
+  return (
+    <div className="App">
+      <Nav />
+      <Model />
+      <Args />
+      <Trans />
+      <Conf />
+      <About />
+    </div>
+  );
 }
+
+message.config({
+  top: 130,
+  duration: 2,
+  maxCount: 3,
+});
 
 
 export default App;

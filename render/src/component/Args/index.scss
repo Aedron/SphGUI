@@ -120,5 +120,16 @@
         }
       }
     }
+    .line-points {
+      margin: 0 16px 12px 16px;
+      .point-item {
+        display: inline-block;
+        margin-right: 30px;
+        & > span {
+          font-weight: bold;
+          margin-right: 15px;
+        }
+      }
+    }
   }
 }

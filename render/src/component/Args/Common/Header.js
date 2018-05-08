@@ -9,10 +9,9 @@ const { Group: ButtonGroup } = Button;
 
 
 function Header(props) {
-  const { index, store, name } = props;
+  const { index, store, name, operator } = props;
   const data = store.mainList[index];
   const { transform: { move, scale, rotate } } = data;
-  console.log(move, scale, rotate);
 
   return (
     <div className="mainlist-header">
@@ -73,8 +72,9 @@ function Header(props) {
           <Button
             type="danger"
             icon="delete"
-          />
+          >删除</Button>
         </Popconfirm>
+        {operator()}
       </div>
     </div>
   );
@@ -84,7 +84,8 @@ function Header(props) {
 Header.propTypes = {
   name: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
+  operator: PropTypes.func.isRequired
 };
 
 

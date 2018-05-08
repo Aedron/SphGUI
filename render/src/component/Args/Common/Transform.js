@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { Radio, InputNumber } from 'antd';
+import { Radio, InputNumber, Input } from 'antd';
 
 
 const { Group: RadioGroup } = Radio;
@@ -11,10 +11,6 @@ const { Group: RadioGroup } = Radio;
 function Transform(props) {
   const { store, index } = props;
   const { transform: { move, scale, rotate } } = store.mainList[index];
-  const inputStyle = {
-    width: '68px',
-    marginRight: '16px'
-  };
 
   return [
     <div if={move} className="mainlist-arg-item" key="move">
@@ -25,7 +21,8 @@ function Transform(props) {
         key={i}
         onChange={store.onChangeTransformMove.bind(store, index, i)}
         min={0}
-        style={inputStyle}
+        size="small"
+        className="small-input"
       />
     </div>,
     <div if={scale} className="mainlist-arg-item" key="scale">
@@ -36,7 +33,8 @@ function Transform(props) {
         key={i}
         onChange={store.onChangeTransformScale.bind(store, index, i)}
         min={0}
-        style={inputStyle}
+        size="small"
+        className="small-input"
       />
     </div>,
     <div if={rotate} className="mainlist-arg-item" key="rotate">
@@ -47,7 +45,8 @@ function Transform(props) {
         key={i}
         onChange={store.onChangeTransformRotate.bind(store, index, i)}
         min={0}
-        style={inputStyle}
+        size="small"
+        className="small-input"
       />
     </div>
   ]

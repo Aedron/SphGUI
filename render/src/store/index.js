@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { observable, action, computed } from 'mobx';
+import { message } from 'antd';
 
 import { hoc, data } from '../utils';
 
@@ -39,7 +40,7 @@ class Store {
    */
   @observable
   mainList = [];
-  // Add
+  // Line
   onAddLine = () => {
     const line = {
       type: typesMap.LINE,
@@ -50,9 +51,23 @@ class Store {
         move: null,
         scale: null,
         rotate: null
-      }
+      },
+      points: [[0, 0, 0], [0, 0, 0]]
     };
     this.mainList.push(line);
+  };
+  onAddLinePoint = (index) => {
+    this.mainList[index].points.push([0, 0, 0]);
+  };
+  onDeleteLinePoint = (index, i) => {
+    const { points } = this.mainList[index];
+    if (points.length <= 2) {
+      return message.warning('至少包含两个点');
+    }
+    points.splice(i, 1);
+  };
+  onChangeLinePoint = (index, i, j, v) => {
+    this.mainList[index].points[i][j] = v;
   };
   // 删除物件
   onDeleteObject = (index) => {
