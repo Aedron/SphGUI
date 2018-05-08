@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { Radio } from 'antd';
 
-import { data } from '../../utils';
+import { data } from '../../../utils';
 
 
 const { drawModes } = data;

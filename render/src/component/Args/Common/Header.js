@@ -1,7 +1,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import { Button, Popconfirm } from 'antd';
 
 
 
@@ -10,11 +10,17 @@ function Header(props) {
   return (
     <div className="mainlist-header">
       <span>{name}</span>
-      <Button
-        type="danger"
-        icon="delete"
-        onClick={store.onDeleteObject.bind(store, index)}
-      >删除</Button>
+      <Popconfirm
+        title="确定删除该物件?"
+        onConfirm={store.onDeleteObject.bind(store, index)}
+        okText="确认"
+        cancelText="取消"
+      >
+        <Button
+          type="danger"
+          icon="delete"
+        >删除</Button>
+      </Popconfirm>
     </div>
   );
 }

@@ -23,7 +23,7 @@ function Type(props) {
         <Radio value="fluid">Fluid(流体)</Radio>
       </RadioGroup>
     </div>
-  )
+  );
 }
 
 Type.propTypes = {

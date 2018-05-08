@@ -5,7 +5,7 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from 'antd';
 
-import { data } from '../../utils';
+import { data } from '../../../utils';
 
 
 const { shapeModes } = data;

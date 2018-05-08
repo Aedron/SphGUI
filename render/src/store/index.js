@@ -45,7 +45,12 @@ class Store {
       type: typesMap.LINE,
       isFluid: false,
       shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
-      drawMode: drawModeMap.FULL
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: [0, 0, 0],
+        scale: [0, 0, 0],
+        rotate: [0, 0, 0, 0]
+      }
     };
     this.mainList.push(line);
   };
@@ -62,6 +67,18 @@ class Store {
   onChangeShapeMode = (index, checkedValues) => {
     if (checkedValues.length === 0) checkedValues = [shapeModeMap.REAL];
     this.mainList[index].shapeMode = checkedValues;
+  };
+  onChangeTransformMove = (index, i, value) => {
+    const { transform } = this.mainList[index];
+    transform.move[i] = value;
+  };
+  onChangeTransformScale = (index, i, value) => {
+    const { transform } = this.mainList[index];
+    transform.scale[i] = value;
+  };
+  onChangeTransformRotate = (index, i, value) => {
+    const { transform } = this.mainList[index];
+    transform.rotate[i] = value;
   }
 }
 
