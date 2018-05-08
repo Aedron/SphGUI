@@ -47,34 +47,55 @@ class Store {
       shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
       drawMode: drawModeMap.FULL,
       transform: {
-        move: [0, 0, 0],
-        scale: [0, 0, 0],
-        rotate: [0, 0, 0, 0]
+        move: null,
+        scale: null,
+        rotate: null
       }
     };
     this.mainList.push(line);
   };
-  // Handler
+  // 删除物件
   onDeleteObject = (index) => {
     this.mainList.splice(index, 1);
   };
+  // 更改物件类型 流体/边界
   onChangeType = (index, e) => {
     this.mainList[index].isFluid = e.target.value === 'fluid';
   };
+  // 更改DrawMode 线/面/内部/实体
   onChangeDrawMode = (index, e) => {
     this.mainList[index].drawMode = e.target.value;
   };
+  // 更改ShapeMode real/dp/fluid...
   onChangeShapeMode = (index, checkedValues) => {
     if (checkedValues.length === 0) checkedValues = [shapeModeMap.REAL];
     this.mainList[index].shapeMode = checkedValues;
+  };
+  // 更改变换 移动属性
+  onToggleTransformMove = (index) => {
+    const { transform } = this.mainList[index];
+    transform.move = transform.move ?
+      null : [0, 0, 0];
   };
   onChangeTransformMove = (index, i, value) => {
     const { transform } = this.mainList[index];
     transform.move[i] = value;
   };
+  // 更改变换 缩放属性
+  onToggleTransformScale = (index) => {
+    const { transform } = this.mainList[index];
+    transform.scale = transform.scale ?
+      null : [0, 0, 0];
+  };
   onChangeTransformScale = (index, i, value) => {
     const { transform } = this.mainList[index];
     transform.scale[i] = value;
+  };
+  // 更改变换 旋转属性
+  onToggleTransformRotate = (index) => {
+    const { transform } = this.mainList[index];
+    transform.rotate = transform.rotate ?
+      null : [0, 0, 0, 0];
   };
   onChangeTransformRotate = (index, i, value) => {
     const { transform } = this.mainList[index];

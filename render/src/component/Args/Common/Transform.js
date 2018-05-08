@@ -17,7 +17,7 @@ function Transform(props) {
   };
 
   return [
-    <div className="mainlist-arg-item" key="move">
+    <div if={move} className="mainlist-arg-item" key="move">
       <span className="args-item-name">移动:</span>
       <InputNumber
         for={(m, i) in move}
@@ -28,7 +28,7 @@ function Transform(props) {
         style={inputStyle}
       />
     </div>,
-    <div className="mainlist-arg-item" key="scale">
+    <div if={scale} className="mainlist-arg-item" key="scale">
       <span className="args-item-name">缩放:</span>
       <InputNumber
         for={(m, i) in scale}
@@ -39,7 +39,7 @@ function Transform(props) {
         style={inputStyle}
       />
     </div>,
-    <div className="mainlist-arg-item" key="rotate">
+    <div if={rotate} className="mainlist-arg-item" key="rotate">
       <span className="args-item-name">旋转:</span>
       <InputNumber
         for={(m, i) in rotate}
