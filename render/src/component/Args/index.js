@@ -1,16 +1,24 @@
 
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Collapse, Radio, Tag, InputNumber } from 'antd';
+import {
+  Collapse, Radio, Tag, InputNumber,
+  Button
+} from 'antd';
+
+import Line from './Line';
 
 import { loadTemplate, genXML } from './utils';
+import { data } from '../../utils';
 import { withStore } from '../../store';
 
 import "./index.scss";
 
 
 const { remote } = window.require('electron');
-const Panel = Collapse.Panel;
+const { typesMap } = data;
+const { Panel } = Collapse;
+const { Group: ButtonGroup } = Button;
 const { Button: RadioButton } = Radio;
 const { Group: RadioGroup } = Radio;
 const { CheckableTag } = Tag;
@@ -31,23 +39,7 @@ class Args extends Component {
       min: [0, 0, 0],
       max: [2, 2, 2]
     },
-    // 主要的物件 mainlist
-    shapeMode: [
-      ['real', false],
-      ['dp', true],
-      ['fluid', false],
-      ['bound', true],
-      ['void', false]
-    ],
-    drawMode: [
-      ['wire(线)', false],
-      ['face(面)', false],
-      ['solid(实体)', false],
-      ['full(面+实体)', true]
-    ],
-    // 流体
-    mkFluid: 0,
-
+    showAdd: true
   };
 
   genOnConChange = (i, j) => {
@@ -86,26 +78,20 @@ class Args extends Component {
       }});
     };
   };
-  genOnShapeModeChange = (i) => {
-    return () => {
-      const { shapeMode } = this.state;
-      shapeMode[i][1] = !shapeMode[i][1];
-      return this.setState({ shapeMode: [...shapeMode] });
-    };
-  };
-  genOnDrawModeChange = (i) => {
-    return () => {
-      const { drawMode } = this.state;
-      drawMode.forEach((d, index) => {
-        d[1] = index === i;
-      });
-      return this.setState({ drawMode });
-    };
+
+  // mainlist
+  onToggleShowAdd = () => this.setState({ showAdd: !this.state.showAdd });
+  renderMainList = (o, index) => {
+    const { type } = o;
+    switch (type) {
+      case typesMap.LINE: return (
+        <Line key={index} index={index} />
+      );
+    }
   };
 
   render() {
     const { state, props: { store } } = this;
-    console.log(genXML(state));
 
     return (
       <div className={`args ${store.view === 'args' ? 'active' : ''}`}>
@@ -117,8 +103,14 @@ class Args extends Component {
           <RadioButton value="3d">3D模型</RadioButton>
           <RadioButton value="xml">自定义</RadioButton>
         </RadioGroup>
-        <Collapse bordered={false}>
-          <Panel header="constantsdef (环境常量)">
+        <Collapse
+          bordered={false}
+          defaultActiveKey={['mainlist']}
+        >
+          <Panel
+            header="constantsdef (环境常量)"
+            key="constants"
+          >
             <div
               for={(arg, i) in state.constants}
               key={arg.name}
@@ -152,7 +144,10 @@ class Args extends Component {
               >({arg.unit})</span>
             </div>
           </Panel>
-          <Panel header="mkconfig (bundle配置)">
+          <Panel
+            header="mkconfig (bundle配置)"
+            key="mkconfig"
+          >
             <div className="mkconfig-item args-item">
               <span className="args-item-name">boundcount:</span>
               <InputNumber
@@ -170,7 +165,10 @@ class Args extends Component {
               />
             </div>
           </Panel>
-          <Panel header="geometry.defintion (容器设置)">
+          <Panel
+            header="geometry.defintion (容器设置)"
+            key="defintion"
+          >
             <div className="defintion-item args-item">
               <span className="args-item-name">dp:</span>
               <InputNumber
@@ -232,25 +230,33 @@ class Args extends Component {
               </div>
             </div>
           </Panel>
-          <Panel header="geometry.commands.mainlist (物件设置)">
-            <div className="mainlist-item args-item shapemode">
-              <span className="args-item-name">shapemode:</span>
-              <CheckableTag
-                for={(m, i) in state.shapeMode}
-                key={m[0]}
-                checked={m[1]}
-                onChange={this.genOnShapeModeChange(i)}
-              >{m[0]}</CheckableTag>
-            </div>
-            <div className="mainlist-item args-item drawmode">
-              <span className="args-item-name">drawmode:</span>
-              <CheckableTag
-                for={(m, i) in state.drawMode}
-                key={m[0]}
-                checked={m[1]}
-                onChange={this.genOnDrawModeChange(i)}
-              >{m[0]}</CheckableTag>
-            </div>
+          <Panel
+            className="mainlist"
+            header="geometry.commands.mainlist (物件设置)"
+            key="mainlist"
+          >
+            { store.mainList.map(this.renderMainList) }
+            <ButtonGroup if={state.showAdd}>
+              <Button
+                type="danger"
+                icon="close"
+                onClick={this.onToggleShowAdd}
+              >取消</Button>
+              <Button icon="folder-open">导入</Button>
+              <Button onClick={store.onAddLine}>线</Button>
+              <Button>三角</Button>
+              <Button>棱锥</Button>
+              <Button>棱柱</Button>
+              <Button>立方体</Button>
+              <Button>球</Button>
+              <Button>圆柱</Button>
+              <Button>Beach</Button>
+            </ButtonGroup>
+            <Button
+              else
+              icon="plus"
+              onClick={this.onToggleShowAdd}
+            >添加物件</Button>
           </Panel>
         </Collapse>
       </div>

@@ -2,8 +2,10 @@
 import React from 'react';
 import { observable, action, computed } from 'mobx';
 
-import { hoc } from '../utils';
+import { hoc, data } from '../utils';
 
+
+const { shapeModeMap, typesMap, drawModeMap } = data;
 
 
 class Store {
@@ -32,7 +34,35 @@ class Store {
     this.argsType = e.target.value;
   };
 
-
+  /*
+  *** 主要的物件 mainlist
+   */
+  @observable
+  mainList = [];
+  // Add
+  onAddLine = () => {
+    const line = {
+      type: typesMap.LINE,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL
+    };
+    this.mainList.push(line);
+  };
+  // Handler
+  onDeleteObject = (index) => {
+    this.mainList.splice(index, 1);
+  };
+  onChangeType = (index, e) => {
+    this.mainList[index].isFluid = e.target.value === 'fluid';
+  };
+  onChangeDrawMode = (index, e) => {
+    this.mainList[index].drawMode = e.target.value;
+  };
+  onChangeShapeMode = (index, checkedValues) => {
+    if (checkedValues.length === 0) checkedValues = [shapeModeMap.REAL];
+    this.mainList[index].shapeMode = checkedValues;
+  }
 }
 
 

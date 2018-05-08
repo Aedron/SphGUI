@@ -87,6 +87,7 @@ function formatXml(xml) {
 }
 
 
+
 export {
   loadTemplate,
   genXML

@@ -5,6 +5,7 @@
   }
   .ant-collapse-content-box {
     text-align: left;
+    padding: 12px 16px !important;
   }
 
   .ant-collapse {
@@ -74,15 +75,42 @@
     margin-right: 30px;
   }
 
-  .mainlist-item {
-    &.shapemode, &.drawmode {
-      & > span {
-        //display: inline-block;
-        margin-right: 20px;
+  .mainlist .ant-collapse-content-box {
+    & > button {
+      width: 100%;
+    }
+    .ant-btn-group {
+      width: 100%;
+      & > button {
+        width: calc(10% + 0.9px);
       }
-      .ant-tag-checkable {
-        margin-left: 20px;
+    }
+  }
+
+  .mainlist-item {
+    border: 1px solid gray;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    .mainlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid gray;
+      padding: 6px 6px 6px 16px;
+      & > span {
         font-size: 14px;
+        font-weight: bold;
+      }
+    }
+    .mainlist-args {
+      padding: 12px 16px;
+      .mainlist-arg-item {
+        display: inline-block;
+        margin-right: 36px;
+        .args-item-name {
+          margin-right: 20px;
+          font-weight: bold;
+        }
       }
     }
   }
