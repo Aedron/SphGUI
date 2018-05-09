@@ -67,6 +67,16 @@ const fillModeMap = {
   BORDER: 'border'
 };
 
+const floatAttrMap = {
+  RHOPBODY: 'rhopbody',
+  RELATIVE_WEIGHT: 'relativeweight',
+  MASSBODY: 'massbody',
+  CENTER: 'center',
+  INERTIA: 'inertia',
+  VELINI: 'velini',
+  OMEGAINI: 'omegaini'
+};
+
 
 export {
   typesMap,
@@ -75,5 +85,6 @@ export {
   boxFills, boxFillMap,
   fileTypes, fileTypeMap,
   fillTypes, fillTypeMap,
-  fillModes, fillModeMap
+  fillModes, fillModeMap,
+  floatAttrMap
 }

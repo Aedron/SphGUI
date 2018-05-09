@@ -42,8 +42,7 @@ class Store {
   /*
   *** 主要的物件 mainlist
    */
-  @observable
-  mainList = [];
+  @observable mainList = [];
   // Line
   @action onAddLine = () => {
     const line = {
@@ -60,6 +59,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       points: [[0, 0, 0], [0, 0, 0]]
     };
     this.mainList.push(line);
@@ -80,6 +80,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
     this.mainList.push(triangle);
@@ -113,6 +114,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
     this.mainList.push(pyramid);
@@ -133,6 +135,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
     this.mainList.push(prism);
@@ -153,6 +156,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       points: [[0, 0, 0], [0, 0, 0]],
       boxFill: [boxFillMap.SOLID]
     };
@@ -201,6 +205,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       point: [0, 0, 0],
       radius: 1
     };
@@ -222,6 +227,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       points: [[0, 0, 0], [0, 0, 0]],
       radius: 1
     };
@@ -243,6 +249,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
     };
     this.mainList.push(cylinder);
@@ -271,6 +278,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      float: null,
       point: [0, 0, 0],
       points: []
     };
@@ -390,6 +398,22 @@ class Store {
   @action onChangeInitWave = (index, i, v) => {
     const { initial: { wave } } = this.mainList[index];
     wave[i] = v;
+  };
+  // 漂浮物属性
+  @action onToggleFloat = (index) => {
+    const data = this.mainList[index];
+    data.float = data.float ? null : {
+      rhopbody: null,
+      relativeweight: null,
+      massbody: null,
+      center: null,
+      inertia: null,
+      velini: null,
+      omegaini: null
+    };
+  };
+  @action onToggleFloatAttr = (index, attr) => {
+
   }
 }
 

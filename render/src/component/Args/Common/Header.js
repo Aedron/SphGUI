@@ -12,7 +12,8 @@ function Header(props) {
   const data = store.mainList[index];
   const {
     transform: {move, scale, rotate},
-    initial: {velocity, wave}
+    initial: {velocity, wave},
+    float
   } = data;
 
   return (
@@ -79,6 +80,7 @@ function Header(props) {
             icon="right"
             onClick={store.onToggleInitVelocity.bind(store, index)}
           >速度</Button>
+
           <Popconfirm
             if={wave}
             title="确定删除初始孤立波属性?"
@@ -93,6 +95,21 @@ function Header(props) {
             icon="double-right"
             onClick={store.onToggleInitWave.bind(store, index)}
           >波浪</Button>
+
+          <Popconfirm
+            if={float}
+            title="确定删除漂浮物属性?"
+            onConfirm={store.onToggleFloat.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button type="primary" icon="up">漂浮</Button>
+          </Popconfirm>
+          <Button
+            else
+            icon="up"
+            onClick={store.onToggleFloat.bind(store, index)}
+          >漂浮</Button>
         </ButtonGroup>
 
         <Popconfirm
@@ -104,7 +121,7 @@ function Header(props) {
           <Button
             type="danger"
             icon="delete"
-          >删除</Button>
+          />
         </Popconfirm>
         {operator()}
       </div>

@@ -75,14 +75,16 @@
     margin-right: 30px;
   }
 
-  .mainlist .ant-collapse-content-box {
-    & > button {
-      width: 100%;
-    }
-    & > .ant-btn-group {
-      width: 100%;
+  .mainlist, .floating {
+    .ant-collapse-content-box {
       & > button {
-        width: calc(9.090909% + 0.9px);
+        width: 100%;
+      }
+      & > .ant-btn-group {
+        width: 100%;
+        & > button {
+          width: calc(9.090909% + 0.9px);
+        }
       }
     }
   }
