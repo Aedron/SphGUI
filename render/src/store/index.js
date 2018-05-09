@@ -8,7 +8,8 @@ import { hoc, data } from '../utils';
 
 const {
   shapeModeMap, typesMap, drawModeMap,
-  boxFillMap, boxFills
+  boxFillMap, boxFills, fillTypeMap,
+  fillModeMap
 } = data;
 
 
@@ -44,7 +45,7 @@ class Store {
   @observable
   mainList = [];
   // Line
-  onAddLine = () => {
+  @action onAddLine = () => {
     const line = {
       type: typesMap.LINE,
       isFluid: false,
@@ -55,13 +56,17 @@ class Store {
         scale: null,
         rotate: null
       },
+      initial: {
+        velocity: null,
+        wave: null
+      },
       points: [[0, 0, 0], [0, 0, 0]]
     };
     this.mainList.push(line);
   };
   // Triangle
-  onAddTriangle = () => {
-    const line = {
+  @action onAddTriangle = () => {
+    const triangle = {
       type: typesMap.TRIANGLES,
       isFluid: false,
       shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
@@ -71,11 +76,15 @@ class Store {
         scale: null,
         rotate: null
       },
+      initial: {
+        velocity: null,
+        wave: null
+      },
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
-    this.mainList.push(line);
+    this.mainList.push(triangle);
   };
-  onChangeTriangleType = (index, e) => {
+  @action onChangeTriangleType = (index, e) => {
     const { value } = e.target;
     const data = this.mainList[index];
     if (value === data.type) return;
@@ -89,8 +98,8 @@ class Store {
     data.type = value;
   };
   // Pyramid
-  onAddPyramid = () => {
-    const line = {
+  @action onAddPyramid = () => {
+    const pyramid = {
       type: typesMap.PYRAMID,
       isFluid: false,
       shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
@@ -100,13 +109,17 @@ class Store {
         scale: null,
         rotate: null
       },
+      initial: {
+        velocity: null,
+        wave: null
+      },
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
-    this.mainList.push(line);
+    this.mainList.push(pyramid);
   };
   // Prism
-  onAddPrism = () => {
-    const line = {
+  @action onAddPrism = () => {
+    const prism = {
       type: typesMap.PRISM,
       isFluid: false,
       shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
@@ -116,13 +129,17 @@ class Store {
         scale: null,
         rotate: null
       },
+      initial: {
+        velocity: null,
+        wave: null
+      },
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
-    this.mainList.push(line);
+    this.mainList.push(prism);
   };
   // Box
-  onAddBox = () => {
-    const line = {
+  @action onAddBox = () => {
+    const box = {
       type: typesMap.BOX,
       isFluid: false,
       shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
@@ -132,12 +149,16 @@ class Store {
         scale: null,
         rotate: null
       },
+      initial: {
+        velocity: null,
+        wave: null
+      },
       points: [[0, 0, 0], [0, 0, 0]],
       boxFill: [boxFillMap.SOLID]
     };
-    this.mainList.push(line);
+    this.mainList.push(box);
   };
-  onChangeBoxFill = (index, item, { target: { checked }}) => {
+  @action onChangeBoxFill = (index, item, { target: { checked }}) => {
     const data = this.mainList[index];
     let boxFill;
     if (checked) {
@@ -164,60 +185,175 @@ class Store {
     }
     data.boxFill = boxFill;
   };
+  // Sphere
+  @action onAddSphere = () => {
+    const sphere = {
+      type: typesMap.SPHERE,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      initial: {
+        velocity: null,
+        wave: null
+      },
+      point: [0, 0, 0],
+      radius: 1
+    };
+    this.mainList.push(sphere);
+  };
+  // Cylinder
+  @action onAddCylinder = () => {
+    const cylinder = {
+      type: typesMap.CYLINDER,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      initial: {
+        velocity: null,
+        wave: null
+      },
+      points: [[0, 0, 0], [0, 0, 0]],
+      radius: 1
+    };
+    this.mainList.push(cylinder);
+  };
+  // Beach
+  @action onAddBeach = () => {
+    const cylinder = {
+      type: typesMap.BEACH,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      initial: {
+        velocity: null,
+        wave: null
+      },
+      points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+    };
+    this.mainList.push(cylinder);
+  };
+  // File
+  @action onAddFile = (path, type) => {
+    const file = {
+      type: 'file',
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      path: path,
+      fileType: type
+    };
+    this.mainList.push(file);
+  };
+  // Fill
+  @action onAddFill = () => {
+    const file = {
+      type: 'fill',
+      fillType: fillTypeMap.POINT,
+      fillMode: [fillModeMap.FLUID],
+      initial: {
+        velocity: null,
+        wave: null
+      },
+      point: [0, 0, 0],
+      points: []
+    };
+    this.mainList.push(file);
+  };
+  @action onChangeFillType = (index, { target: { value } }) => {
+    const data = this.mainList[index];
+    data.fillType = value;
+    const p = [0, 0, 0];
+    const ps = [p, p, p, p, p, p];
+    switch (value) {
+      case fillTypeMap.POINT: data.points = []; break;
+      case fillTypeMap.BOX: {
+        data.points = [...data.points, ...ps].slice(0, 2);
+        break;
+      }
+      case fillTypeMap.FIGURE: {
+        data.points = [...data.points, ...ps].slice(0, 4);
+        break;
+      }
+      case fillTypeMap.PRISM: {
+        data.points = [...data.points, ...ps].slice(0, 6)
+      }
+    }
+  };
+  @action onChangeFillMode = (index, checkedValues) => {
+    const data = this.mainList[index];
+    data.fillMode = checkedValues;
+  };
 
   // 删除物件
-  onDeleteObject = (index) => {
+  @action onDeleteObject = (index) => {
     this.mainList.splice(index, 1);
   };
   // 更改物件类型 流体/边界
-  onChangeType = (index, e) => {
+  @action onChangeType = (index, e) => {
     this.mainList[index].isFluid = e.target.value === 'fluid';
   };
   // 更改DrawMode 线/面/内部/实体
-  onChangeDrawMode = (index, e) => {
+  @action onChangeDrawMode = (index, e) => {
     this.mainList[index].drawMode = e.target.value;
   };
   // 更改ShapeMode real/dp/fluid...
-  onChangeShapeMode = (index, checkedValues) => {
+  @action onChangeShapeMode = (index, checkedValues) => {
     if (checkedValues.length === 0) checkedValues = [shapeModeMap.REAL];
     this.mainList[index].shapeMode = checkedValues;
   };
   // 更改变换 移动属性
-  onToggleTransformMove = (index) => {
+  @action onToggleTransformMove = (index) => {
     const { transform } = this.mainList[index];
     transform.move = transform.move ?
       null : [0, 0, 0];
   };
-  onChangeTransformMove = (index, i, value) => {
+  @action onChangeTransformMove = (index, i, value) => {
     const { transform } = this.mainList[index];
     transform.move[i] = value;
   };
   // 更改变换 缩放属性
-  onToggleTransformScale = (index) => {
+  @action onToggleTransformScale = (index) => {
     const { transform } = this.mainList[index];
     transform.scale = transform.scale ?
       null : [0, 0, 0];
   };
-  onChangeTransformScale = (index, i, value) => {
+  @action onChangeTransformScale = (index, i, value) => {
     const { transform } = this.mainList[index];
     transform.scale[i] = value;
   };
   // 更改变换 旋转属性
-  onToggleTransformRotate = (index) => {
+  @action onToggleTransformRotate = (index) => {
     const { transform } = this.mainList[index];
     transform.rotate = transform.rotate ?
       null : [0, 0, 0, 0];
   };
-  onChangeTransformRotate = (index, i, value) => {
+  @action onChangeTransformRotate = (index, i, value) => {
     const { transform } = this.mainList[index];
     transform.rotate[i] = value;
   };
   // 添加/删除/编辑点
-  onAddPoint = (index, point) => {
+  @action onAddPoint = (index, point) => {
     if (!Array.isArray(point)) point=[0, 0, 0];
     this.mainList[index].points.push(point);
   };
-  onDeletePoint = (index, i, min) => {
+  @action onDeletePoint = (index, i, min) => {
     if (typeof min !== 'number') min = 2;
     const { points } = this.mainList[index];
     if (points.length <= min) {
@@ -225,10 +361,36 @@ class Store {
     }
     points.splice(i, 1);
   };
-  onChangePoint = (index, i, j, v) => {
+  @action onChangePoint = (index, i, j, v) => {
     if (typeof v === 'object') v = v.target.value;
     this.mainList[index].points[i][j] = v;
   };
+  @action onChangeSinglePoint = (index, i, v) => {
+    const { point } = this.mainList[index];
+    point[i] = v;
+  };
+  // 编辑半径
+  @action onChangeRadius = (index, v) => {
+    this.mainList[index].radius = v;
+  };
+  // 初始速度
+  @action onToggleInitVelocity = (index) => {
+    const { initial } = this.mainList[index];
+    initial.velocity = initial.velocity ? null : [0, 0, 0];
+  };
+  @action onChangeInitVelocity = (index, i, v) => {
+    const { initial: { velocity } } = this.mainList[index];
+    velocity[i] = v;
+  };
+  // 初始孤立波
+  @action onToggleInitWave = (index) => {
+    const { initial } = this.mainList[index];
+    initial.wave = initial.wave ? null : [0, 0, 0];
+  };
+  @action onChangeInitWave = (index, i, v) => {
+    const { initial: { wave } } = this.mainList[index];
+    wave[i] = v;
+  }
 }
 
 

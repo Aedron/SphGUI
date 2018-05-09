@@ -44,10 +44,36 @@ const boxFillMap = {
   BACK: 'back'
 };
 
+const fileTypes = ['vtk', 'ply', 'stl'];
+const fileTypeMap = {
+  VTK: 'vtk',
+  PLY: 'ply',
+  STL: 'stl'
+};
+
+const fillTypes = ['point', 'box', 'figure', 'prism'];
+const fillTypeMap = {
+  POINT: 'point',
+  BOX: 'box',
+  FIGURE: 'figure',
+  PRISM: 'prism'
+};
+
+const fillModes = ['void', 'fluid', 'bound', 'border'];
+const fillModeMap = {
+  VOID: 'void',
+  FLUID: 'fluid',
+  BOUND: 'bound',
+  BORDER: 'border'
+};
+
 
 export {
   typesMap,
   shapeModes, shapeModeMap,
   drawModes, drawModeMap,
-  boxFills, boxFillMap
+  boxFills, boxFillMap,
+  fileTypes, fileTypeMap,
+  fillTypes, fillTypeMap,
+  fillModes, fillModeMap
 }

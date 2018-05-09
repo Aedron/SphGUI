@@ -1,10 +1,12 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { Button, InputNumber, Radio } from 'antd';
 import Common from '../Common';
+import Point from '../Point';
 import { withStore } from '../../../store';
 import { data } from '../../../utils';
 
@@ -26,25 +28,12 @@ class Triangle extends Component {
     const { type } = store.mainList[index];
     return (
       <div key={i} className="mainlist-arg-item point-item">
-        {
-          p.map((v, j) => [
-            <span key="0">{['X', 'Y', 'Z'][j]}</span>,
-            <InputNumber
-              key="1"
-              value={v}
-              className="small-input"
-              size="small"
-              onChange={store.onChangePoint.bind(store, index, i, j)}
-          />
-          ])
-        }
-        <Button
-          if={type === typesMap.STRIP}
-          type="danger"
-          shape="circle"
-          icon="close"
-          size="small"
-          onClick={store.onDeletePoint.bind(store, index, i, 4)}
+        <span>{i + 1}: </span>
+        <Point
+          showDelete={type === typesMap.STRIP}
+          point={toJS(p)}
+          onChange={store.onChangePoint.bind(store, index, i)}
+          onDelete={store.onDeletePoint.bind(store, index, i, 4)}
         />
       </div>
     );

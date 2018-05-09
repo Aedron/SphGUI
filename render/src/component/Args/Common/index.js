@@ -8,6 +8,7 @@ import Type from './Type';
 import DrawMode from './DrawMode';
 import ShapeMode from './ShapeMode';
 import Transform from './Transform';
+import Initial from './Initial';
 
 
 
@@ -27,6 +28,7 @@ function Common(props) {
       <DrawMode store={store} index={index} />
       <ShapeMode store={store} index={index} />
       <Transform store={store} index={index} />
+      <Initial store={store} index={index} />
     </div>
   ];
 }

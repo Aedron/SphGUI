@@ -20,7 +20,7 @@ const { Group: CheckboxGroup } = Checkbox;
 
 @withStore
 @observer
-class Box extends Component {
+class Sphere extends Component {
   static propTypes = {
     index: PropTypes.number.isRequired
   };
@@ -35,7 +35,6 @@ class Box extends Component {
             <InputNumber
               key="1"
               value={v}
-              className="small-input"
               size="small"
               onChange={store.onChangePoint.bind(store, index, i, j)}
           />
@@ -50,29 +49,19 @@ class Box extends Component {
     const data = store.mainList[index];
 
     return (
-      <div className="box mainlist-item">
+      <div className="sphere mainlist-item">
         <Common
           store={store}
           index={index}
-          name="Box (立方体)"
+          name="Sphere (球)"
         />
         <div className="mainlist-arg-item">
-          <span className="args-item-name">BoxFill</span>
-          <Checkbox
-            for={c in boxFills}
-            onChange={store.onChangeBoxFill.bind(store, index, c)}
-            checked={data.boxFill.includes(c)}
-            disabled={data.boxFill.includes(boxFillMap.ALL) && ![boxFillMap.ALL, boxFillMap.SOLID].includes(c)}
-            key={c}
-          >{c}</Checkbox>
+          <span className="args-item-name">半径: </span>
+          <Point point={toJS(data.point)} onChange={store.onChangeSinglePoint.bind(store, index)} />
         </div>
         <div className="mainlist-arg-item">
-          <span className="args-item-name">顶点: </span>
-          <Point point={toJS(data.points[0])} onChange={store.onChangePoint.bind(store, index, 0)} />
-        </div>
-        <div className="mainlist-arg-item">
-          <span className="args-item-name">棱长: </span>
-          <Point point={toJS(data.points[1])} onChange={store.onChangePoint.bind(store, index, 1)} />
+          <span className="args-item-name">半径: </span>
+          <InputNumber value={data.radius} min={0} onChange={store.onChangeRadius.bind(store, index)} />
         </div>
       </div>
     );
@@ -80,4 +69,4 @@ class Box extends Component {
 }
 
 
-export default Box;
+export default Sphere;

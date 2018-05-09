@@ -15,7 +15,7 @@ import "./index.scss";
 
 @withStore
 @observer
-class Prism extends Component {
+class Beach extends Component {
   static propTypes = {
     index: PropTypes.number.isRequired
   };
@@ -27,7 +27,7 @@ class Prism extends Component {
   onDeletePoint = (i) => {
     const { props: { store, index } } = this;
     // store.onDeletePoint(index, i-1, 6);
-    store.onDeletePoint(index, i, 6);
+    store.onDeletePoint(index, i, 3);
   };
 
   renderPoint = (p, i) => {
@@ -54,7 +54,7 @@ class Prism extends Component {
         <Common
           store={store}
           index={index}
-          name="Prism (棱柱)"
+          name="Beach"
         />
         <div className="line-points mainlist-item">
           <div className="mainlist-header">
@@ -74,4 +74,4 @@ class Prism extends Component {
 }
 
 
-export default Prism;
+export default Beach;

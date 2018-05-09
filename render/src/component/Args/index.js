@@ -11,8 +11,13 @@ import Triangle from './Triangle';
 import Pyramid from './Pyramid';
 import Prism from './Prism';
 import Box from './Box';
+import Sphere from './Sphere';
+import Cylinder from './Cylinder';
+import Beach from './Beach';
+import File from './File';
+import Fill from './Fill';
 
-import { loadTemplate, genXML } from './utils';
+import { loadTemplate, importFile } from './utils';
 import { data } from '../../utils';
 import { withStore } from '../../store';
 
@@ -85,6 +90,14 @@ class Args extends Component {
 
   // mainlist
   onToggleShowAdd = () => this.setState({ showAdd: !this.state.showAdd });
+  onAddFile = async () => {
+    const { props: { store } } = this;
+    const files = await importFile();
+    files.forEach((path) => {
+      const type = path.split('.').pop();
+      store.onAddFile(path, type);
+    });
+  };
   renderMainList = (o, index) => {
     const { type } = o;
     let Component;
@@ -96,6 +109,12 @@ class Args extends Component {
       case typesMap.PYRAMID: Component = Pyramid; break;
       case typesMap.PRISM: Component = Prism; break;
       case typesMap.BOX: Component = Box; break;
+      case typesMap.SPHERE: Component = Sphere; break;
+      case typesMap.CYLINDER: Component = Cylinder; break;
+      case typesMap.BEACH: Component = Beach; break;
+      case 'file': Component = File; break;
+      case 'fill': Component = Fill; break;
+      default: return;
     }
     return <Component key={index} index={index} />
   };
@@ -252,15 +271,16 @@ class Args extends Component {
                 icon="close"
                 onClick={this.onToggleShowAdd}
               >取消</Button>
-              <Button icon="folder-open">导入</Button>
+              <Button icon="folder-open" onClick={this.onAddFile}>导入</Button>
               <Button onClick={store.onAddLine}>线</Button>
               <Button onClick={store.onAddTriangle}>三角</Button>
               <Button onClick={store.onAddPyramid}>棱锥</Button>
               <Button onClick={store.onAddPrism}>棱柱</Button>
               <Button onClick={store.onAddBox}>立方体</Button>
-              <Button>球</Button>
-              <Button>圆柱</Button>
-              <Button>Beach</Button>
+              <Button onClick={store.onAddSphere}>球</Button>
+              <Button onClick={store.onAddCylinder}>圆柱</Button>
+              <Button onClick={store.onAddBeach}>Beach</Button>
+              <Button onClick={store.onAddFill}>填充</Button>
             </ButtonGroup>
             <Button
               else
