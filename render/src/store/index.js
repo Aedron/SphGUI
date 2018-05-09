@@ -9,7 +9,7 @@ import { hoc, data } from '../utils';
 const {
   shapeModeMap, typesMap, drawModeMap,
   boxFillMap, boxFills, fillTypeMap,
-  fillModeMap
+  fillModeMap, defaultFloatAttrMap
 } = data;
 
 
@@ -413,8 +413,18 @@ class Store {
     };
   };
   @action onToggleFloatAttr = (index, attr) => {
-
-  }
+    const { float } = this.mainList[index];
+    float[attr] = float[attr] || float[attr] === 0 ?
+      null : defaultFloatAttrMap[attr.toUpperCase()];
+  };
+  @action onChangeFloatAttrNumber = (index, attr, v) => {
+    const { float } = this.mainList[index];
+    float[attr] = v;
+  };
+  @action onChangeFloatAttrArray = (index, attr, i, v) => {
+    const { float } = this.mainList[index];
+    float[attr][i] = v;
+  };
 }
 
 

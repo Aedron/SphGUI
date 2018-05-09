@@ -77,6 +77,16 @@ const floatAttrMap = {
   OMEGAINI: 'omegaini'
 };
 
+const defaultFloatAttrMap = {
+  RHOPBODY: 0,
+  RELATIVEWEIGHT: 1,
+  MASSBODY: 0,
+  CENTER: [0, 0, 0],
+  INERTIA: [0, 0, 0],
+  VELINI: [0, 0, 0],
+  OMEGAINI: [0, 0, 0]
+};
+
 
 export {
   typesMap,
@@ -86,5 +96,5 @@ export {
   fileTypes, fileTypeMap,
   fillTypes, fillTypeMap,
   fillModes, fillModeMap,
-  floatAttrMap
+  floatAttrMap, defaultFloatAttrMap
 }
