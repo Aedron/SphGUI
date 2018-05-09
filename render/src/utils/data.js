@@ -29,9 +29,25 @@ const drawModeMap = {
   FULL: 'full'
 };
 
+const boxFills = [
+  'solid', 'all', 'top', 'bottom', 'left',
+  'right', 'front', 'back'
+];
+const boxFillMap = {
+  SOLID: 'solid',
+  ALL: 'all',
+  TOP: 'top',
+  BOTTOM: 'bottom',
+  LEFT: 'left',
+  RIGHT: 'right',
+  FRONT: 'front',
+  BACK: 'back'
+};
+
 
 export {
   typesMap,
   shapeModes, shapeModeMap,
-  drawModes, drawModeMap
+  drawModes, drawModeMap,
+  boxFills, boxFillMap
 }

@@ -112,17 +112,17 @@
     }
     .mainlist-args {
       padding: 12px 16px;
-      .mainlist-arg-item {
-        display: inline-block;
-        margin: 8px 36px 8px 0;
-        .ant-radio-group {
-          padding: 0;
-          margin: 0;
-        }
-        .args-item-name {
-          margin-right: 20px;
-          font-weight: bold;
-        }
+    }
+    .mainlist-arg-item {
+      display: inline-block;
+      margin: 8px 36px 8px 0;
+      .ant-radio-group {
+        padding: 0;
+        margin: 0;
+      }
+      .args-item-name {
+        margin-right: 20px;
+        font-weight: bold;
       }
     }
     .line-points {

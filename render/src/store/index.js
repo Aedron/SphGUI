@@ -6,7 +6,10 @@ import { message } from 'antd';
 import { hoc, data } from '../utils';
 
 
-const { shapeModeMap, typesMap, drawModeMap } = data;
+const {
+  shapeModeMap, typesMap, drawModeMap,
+  boxFillMap, boxFills
+} = data;
 
 
 class Store {
@@ -117,6 +120,50 @@ class Store {
     };
     this.mainList.push(line);
   };
+  // Box
+  onAddBox = () => {
+    const line = {
+      type: typesMap.BOX,
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
+      points: [[0, 0, 0], [0, 0, 0]],
+      boxFill: [boxFillMap.SOLID]
+    };
+    this.mainList.push(line);
+  };
+  onChangeBoxFill = (index, item, { target: { checked }}) => {
+    const data = this.mainList[index];
+    let boxFill;
+    if (checked) {
+      switch (item) {
+        case boxFillMap.SOLID: boxFill = [boxFillMap.SOLID]; break;
+        case boxFillMap.ALL: boxFill = boxFills.slice(1); break;
+        default: {
+          boxFill = data.boxFill.filter(i => i !== boxFillMap.SOLID);
+          boxFill.push(item);
+          if (boxFill.length === 6) {
+            boxFill.push(boxFillMap.ALL);
+          }
+        }
+      }
+    } else {
+      if (item === boxFillMap.ALL) {
+        boxFill = [boxFillMap.SOLID];
+      } else {
+        boxFill = data.boxFill.filter(i => i !== item && i !== boxFillMap.ALL);
+        if (data.boxFill.length === 0) {
+          boxFill = [boxFillMap.SOLID]
+        }
+      }
+    }
+    data.boxFill = boxFill;
+  };
 
   // 删除物件
   onDeleteObject = (index) => {
@@ -174,7 +221,7 @@ class Store {
     if (typeof min !== 'number') min = 2;
     const { points } = this.mainList[index];
     if (points.length <= min) {
-      return message.warning('至少包含两个点');
+      return message.warning(`至少包含${min}个点`);
     }
     points.splice(i, 1);
   };

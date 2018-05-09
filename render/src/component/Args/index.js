@@ -9,6 +9,8 @@ import {
 import Line from './Line';
 import Triangle from './Triangle';
 import Pyramid from './Pyramid';
+import Prism from './Prism';
+import Box from './Box';
 
 import { loadTemplate, genXML } from './utils';
 import { data } from '../../utils';
@@ -92,6 +94,8 @@ class Args extends Component {
       case typesMap.QUADRI: Component = Triangle; break;
       case typesMap.STRIP: Component = Triangle; break;
       case typesMap.PYRAMID: Component = Pyramid; break;
+      case typesMap.PRISM: Component = Prism; break;
+      case typesMap.BOX: Component = Box; break;
     }
     return <Component key={index} index={index} />
   };
@@ -252,8 +256,8 @@ class Args extends Component {
               <Button onClick={store.onAddLine}>线</Button>
               <Button onClick={store.onAddTriangle}>三角</Button>
               <Button onClick={store.onAddPyramid}>棱锥</Button>
-              <Button>棱柱</Button>
-              <Button>立方体</Button>
+              <Button onClick={store.onAddPrism}>棱柱</Button>
+              <Button onClick={store.onAddBox}>立方体</Button>
               <Button>球</Button>
               <Button>圆柱</Button>
               <Button>Beach</Button>

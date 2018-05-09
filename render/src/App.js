@@ -29,7 +29,7 @@ function App() {
 message.config({
   top: 130,
   duration: 2,
-  maxCount: 3,
+  maxCount: 1,
 });
 
 

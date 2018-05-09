@@ -1,0 +1,9 @@
+
+.box {
+  & > .mainlist-args {
+    padding-bottom: 0 !important;
+  }
+  & > .mainlist-arg-item {
+    padding: 0 16px 12px 16px;
+  }
+}
