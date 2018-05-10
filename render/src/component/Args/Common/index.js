@@ -13,6 +13,9 @@ import Initial from './Initial';
 import Float from './Float';
 import Motion from './Motion';
 
+import './index.scss';
+
+
 const { floatAttrMap } = data;
 const {Group: RadioGroup} = Radio;
 const {Group: ButtonGroup} = Button;

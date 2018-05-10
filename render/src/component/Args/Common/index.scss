@@ -1,0 +1,59 @@
+
+.motion {
+  .ant-radio-group {
+    margin: 0 !important;
+  }
+  .mainlist-args {
+    padding-right: 0 !important;
+  }
+  .ant-timeline-item {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    .ant-timeline-item-head {
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+    .ant-timeline-item-content {
+      height: 48px;
+      & > button {
+        margin: 0 !important;
+      }
+      & > * {
+        margin: 0 12px 0 0 !important;
+        top: 0;
+        left: 0;
+        & > span {
+          font-weight: bold;
+          margin-right: 10px;
+        }
+        .ant-radio-wrapper {
+          font-weight: bold;
+        }
+      }
+      span.ant-radio + * {
+        padding: 0 3px;
+      }
+      .point {
+        margin: 0;
+        & + button {
+          display: none;
+        }
+      }
+      .ant-radio-button-wrapper {
+        padding: 0 8px;
+        cursor: pointer;
+      }
+      margin: 0;
+      padding: 0;
+      top: 0;
+      left: 12px;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+}

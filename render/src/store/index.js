@@ -440,7 +440,45 @@ class Store {
   // Motion
   @action onToggleMotion = (index) => {
     const data = this.mainList[index];
-    data.motion = data.motion ? null : [];
+    if (data.motion) {
+      data.motion = null;
+    } else {
+      data.motion = [];
+      this.onAddMotion(index);
+    }
+  };
+  @action onAddMotion = (index) => {
+    const { motion } = this.mainList[index];
+    motion.push({
+      type: 'move',
+      vel: [0, 0, 0],
+      ace: null,
+      duration: 1,
+    });
+  };
+  @action onDeleteMotion = (index, i) => {
+    const { motion } = this.mainList[index];
+    if (motion.length === 1) return this.mainList[index].motion = null;
+    motion.splice(i, 1);
+  };
+  @action onChangeMotionType = (index, i, {target: { value }}) => {
+    const { motion } = this.mainList[index];
+    const m = motion[i];
+    m.type = value;
+    m.vel = value === 'pause' ? null : [0, 0, 0];
+    m.ace = value === 'ace' ? [0, 0, 0] : null;
+  };
+  @action onChangeMotionDuration = (index, i, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].duration = value;
+  };
+  @action onChangeMotionVel = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].vel[j] = value;
+  };
+  @action onChangeMotionAcc = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].ace[j] = value;
   }
 }
 
