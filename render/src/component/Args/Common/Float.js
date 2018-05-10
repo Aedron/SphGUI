@@ -23,8 +23,8 @@ function Float(props) {
     omegaini
   } = float || {};
   const floatData = [
-    [rhopbody, 'rhopbody'],
     [relativeweight, '相对质量', 'relativeweight'],
+    [rhopbody, 'rhopbody'],
     [massbody, 'massbody'],
     [center, 'center'],
     [inertia, 'inertia'],

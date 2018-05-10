@@ -13,7 +13,7 @@ function Header(props) {
   const {
     transform: {move, scale, rotate},
     initial: {velocity, wave},
-    float
+    float, motion
   } = data;
 
   return (
@@ -21,81 +21,6 @@ function Header(props) {
       <span>{name}</span>
       <div>
         <ButtonGroup>
-          <Popconfirm
-            if={move}
-            title="确定删除移动属性?"
-            onConfirm={store.onToggleTransformMove.bind(store, index)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <Button type="primary" icon="swap">移动</Button>
-          </Popconfirm>
-          <Button
-            else
-            icon="swap"
-            onClick={store.onToggleTransformMove.bind(store, index)}
-          >移动</Button>
-          <Popconfirm
-            if={scale}
-            title="确定删除缩放属性?"
-            onConfirm={store.onToggleTransformScale.bind(store, index)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <Button type="primary" icon="arrows-alt">缩放</Button>
-          </Popconfirm>
-          <Button
-            else
-            icon="arrows-alt"
-            onClick={store.onToggleTransformScale.bind(store, index)}
-          >缩放</Button>
-          <Popconfirm
-            if={rotate}
-            title="确定删除旋转属性?"
-            onConfirm={store.onToggleTransformRotate.bind(store, index)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <Button type="primary" icon="retweet">旋转</Button>
-          </Popconfirm>
-          <Button
-            else
-            icon="retweet"
-            onClick={store.onToggleTransformRotate.bind(store, index)}
-          >旋转</Button>
-        </ButtonGroup>
-
-        <ButtonGroup>
-          <Popconfirm
-            if={velocity}
-            title="确定删除初始速度属性?"
-            onConfirm={store.onToggleInitVelocity.bind(store, index)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <Button type="primary" icon="right">速度</Button>
-          </Popconfirm>
-          <Button
-            else
-            icon="right"
-            onClick={store.onToggleInitVelocity.bind(store, index)}
-          >速度</Button>
-
-          <Popconfirm
-            if={wave}
-            title="确定删除初始孤立波属性?"
-            onConfirm={store.onToggleInitWave.bind(store, index)}
-            okText="确认"
-            cancelText="取消"
-          >
-            <Button type="primary" icon="double-right">波浪</Button>
-          </Popconfirm>
-          <Button
-            else
-            icon="double-right"
-            onClick={store.onToggleInitWave.bind(store, index)}
-          >波浪</Button>
-
           <Popconfirm
             if={float}
             title="确定删除漂浮物属性?"
@@ -110,6 +35,21 @@ function Header(props) {
             icon="up"
             onClick={store.onToggleFloat.bind(store, index)}
           >漂浮</Button>
+
+          <Popconfirm
+            if={motion}
+            title="确定删除运动属性?"
+            onConfirm={store.onToggleMotion.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button type="primary" icon="forward">运动</Button>
+          </Popconfirm>
+          <Button
+            else
+            icon="forward"
+            onClick={store.onToggleMotion.bind(store, index)}
+          >运动</Button>
         </ButtonGroup>
 
         <Popconfirm
@@ -121,7 +61,7 @@ function Header(props) {
           <Button
             type="danger"
             icon="delete"
-          />
+          >删除</Button>
         </Popconfirm>
         {operator()}
       </div>

@@ -59,6 +59,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0]]
     };
@@ -80,6 +81,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
@@ -114,6 +116,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
@@ -135,6 +138,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
@@ -156,6 +160,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0]],
       boxFill: [boxFillMap.SOLID]
@@ -205,6 +210,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       point: [0, 0, 0],
       radius: 1
@@ -227,6 +233,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0]],
       radius: 1
@@ -249,6 +256,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
     };
@@ -278,6 +286,7 @@ class Store {
         velocity: null,
         wave: null
       },
+      motion: null,
       float: null,
       point: [0, 0, 0],
       points: []
@@ -403,8 +412,8 @@ class Store {
   @action onToggleFloat = (index) => {
     const data = this.mainList[index];
     data.float = data.float ? null : {
+      relativeweight: 1,
       rhopbody: null,
-      relativeweight: null,
       massbody: null,
       center: null,
       inertia: null,
@@ -416,6 +425,9 @@ class Store {
     const { float } = this.mainList[index];
     float[attr] = float[attr] || float[attr] === 0 ?
       null : defaultFloatAttrMap[attr.toUpperCase()];
+    if (Object.keys(float).filter(k => float[k] !== null).length === 0) {
+      this.mainList[index].float = null;
+    }
   };
   @action onChangeFloatAttrNumber = (index, attr, v) => {
     const { float } = this.mainList[index];
@@ -425,6 +437,11 @@ class Store {
     const { float } = this.mainList[index];
     float[attr][i] = v;
   };
+  // Motion
+  @action onToggleMotion = (index) => {
+    const data = this.mainList[index];
+    data.motion = data.motion ? null : [];
+  }
 }
 
 
