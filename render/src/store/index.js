@@ -450,10 +450,18 @@ class Store {
   @action onAddMotion = (index) => {
     const { motion } = this.mainList[index];
     motion.push({
-      type: 'move',
+      type: 'linear',
+      duration: 1,
       vel: [0, 0, 0],
       ace: null,
-      duration: 1,
+      // rotate
+      axisp1: null,
+      axisp2: null,
+      // sin
+      freq: null,
+      ampl: null,
+      phase: null,
+      ref: null
     });
   };
   @action onDeleteMotion = (index, i) => {
@@ -463,23 +471,81 @@ class Store {
   };
   @action onChangeMotionType = (index, i, {target: { value }}) => {
     const { motion } = this.mainList[index];
-    const m = motion[i];
-    m.type = value;
-    m.vel = value === 'pause' ? null : [0, 0, 0];
-    m.ace = value === 'ace' ? [0, 0, 0] : null;
+    motion[i].type = value;
+    switch (value) {
+      case 'linear': {
+        motion[i].axisp1 = null;
+        motion[i].axisp2 = null;
+        motion[i].freq = null;
+        motion[i].ampl = null;
+        motion[i].phase = null;
+        motion[i].ref = null;
+        break;
+      }
+      case 'rotate': {
+        motion[i].axisp1 = motion.axisp1 || [0, 0, 0];
+        motion[i].axisp2 = motion.axisp2 || [0, 0, 0];
+        motion[i].freq = null;
+        motion[i].ampl = null;
+        motion[i].phase = null;
+        motion[i].ref = null;
+        break;
+      }
+      case 'sin': {
+        motion[i].axisp1 = null;
+        motion[i].axisp2 = null;
+        motion[i].freq = [0, 0, 0];
+        motion[i].ampl = [0, 0, 0];
+        motion[i].phase = [0, 0, 0];
+        motion[i].ref = null;
+        break;
+      }
+    }
   };
   @action onChangeMotionDuration = (index, i, value) => {
     const { motion } = this.mainList[index];
-    motion[i].duration = value;
+    motion[i].duration = value || 0;
   };
   @action onChangeMotionVel = (index, i, j, value) => {
     const { motion } = this.mainList[index];
     motion[i].vel[j] = value;
   };
-  @action onChangeMotionAcc = (index, i, j, value) => {
+  @action onToggleMotionAce = (index, i) => {
+    const motion = this.mainList[index].motion[i];
+    motion.ace = motion.ace ? null : [0, 0, 0];
+  };
+  @action onChangeMotionAce = (index, i, j, value) => {
     const { motion } = this.mainList[index];
     motion[i].ace[j] = value;
-  }
+  };
+  @action onChangeMotionRef = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].ref[j] = value;
+  };
+  @action onChangeMotionFreq = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].freq[j] = value;
+  };
+  @action onChangeMotionAmpl = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].ampl[j] = value;
+  };
+  @action onChangeMotionPhase = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].phase[j] = value;
+  };
+  @action onChangeMotionAxisp1 = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].axisp1[j] = value;
+  };
+  @action onChangeMotionAxisp2 = (index, i, j, value) => {
+    const { motion } = this.mainList[index];
+    motion[i].axisp2[j] = value;
+  };
+  @action onChangeMotionValue = (index, i, key, value) => {
+    const { motion } = this.mainList[index];
+    motion[i][key] = value;
+  };
 }
 
 
