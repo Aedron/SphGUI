@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { toJS } from 'mobx';
 import {
   Collapse, Radio, Tag, InputNumber,
   Button, Input, Switch
@@ -18,7 +19,7 @@ import File from './File';
 import Fill from './Fill';
 import Wave from './Wave';
 
-import { loadTemplate, importFile } from './utils';
+import { importFile } from './utils';
 import { data } from '../../utils';
 import { withStore } from '../../store';
 
@@ -38,57 +39,8 @@ const { CheckableTag } = Tag;
 @observer
 class Args extends Component {
   state = {
-    constants: loadTemplate('constants'),
-    params: loadTemplate('params'),
-    mkConfig: {
-      boundCount: 240,
-      fluidCount: 10
-    },
-    container: {
-      dp: 0.005,
-      min: [0, 0, 0],
-      max: [2, 2, 2]
-    },
-    showAdd: false
+    showAdd: true
   };
-
-  genOnConChange = (i, j) => {
-    const { state: { constants } } = this;
-    return (e) => {
-      const value = typeof e === 'object' ? e.target.value : e;
-      if (j || j === 0) {
-        constants[i].value[j][1] = value;
-      } else {
-        constants[i].value = value;
-      }
-      this.setState({ constants });
-    }
-  };
-  onChangeBoundCount = (value) => {
-    const { mkConfig } = this.state;
-    this.setState({ mkConfig: { ...mkConfig, boundCount: value }});
-  };
-  onChangeFluidCount = (value) => {
-    const { mkConfig } = this.state;
-    this.setState({ mkConfig: { ...mkConfig, fluidCount: value }});
-  };
-  onChangeContainerDp = (value) => {
-    const { container } = this.state;
-    this.setState({ container: { ...container, dp: value } });
-  };
-  genOnChangeContainer = (i, isMax) => {
-    return (value) => {
-      const { container } = this.state;
-      let { min, max } = container;
-      (isMax ? max : min)[i] = value;
-      this.setState({ container: {
-        ...container,
-          min: [...min],
-          max: [...max]
-      }});
-    };
-  };
-
   // mainlist
   onAdd = (type) => {
     const { props: { store } } = this;
@@ -116,6 +68,8 @@ class Args extends Component {
       store.onAddFile(path, type);
     });
   };
+
+  // params
   genOnParamsChange = (i) => {
     return (e) => {
       const { params } = this.state;
@@ -130,6 +84,8 @@ class Args extends Component {
       return this.setState({ params })
     };
   };
+
+  // render
   renderMainList = (o, index) => {
     const { type } = o;
     let Component;
@@ -199,14 +155,6 @@ class Args extends Component {
 
     return (
       <div className={`args ${store.view === 'args' ? 'active' : ''}`}>
-        <RadioGroup
-          value={store.argsType}
-          onChange={store.changeArgsType}
-        >
-          <RadioButton value="2d">2D模型</RadioButton>
-          <RadioButton value="3d">3D模型</RadioButton>
-          <RadioButton value="xml">自定义</RadioButton>
-        </RadioGroup>
         <Collapse
           bordered={false}
           defaultActiveKey={['wave']}
@@ -217,13 +165,13 @@ class Args extends Component {
             key="constants"
           >
             <div
-              for={(arg, i) in state.constants}
+              for={(arg, i) in store.constants}
               key={arg.name}
               className={"args-item"}
             >
               <p className="args-item-name">{arg.displayName || arg.name}:</p>
               <div
-                if={Array.isArray(arg.value)}
+                if={Array.isArray(toJS(arg.value))}
                 className="args-item-values"
               >
                 <div
@@ -233,7 +181,7 @@ class Args extends Component {
                   <span>{subArg[0]}</span>
                   <InputNumber
                     value={subArg[1]}
-                    onChange={this.genOnConChange(i, j)}
+                    onChange={store.onChangeCon.bind(store, i, j)}
                   />
                 </div>
               </div>
@@ -241,7 +189,7 @@ class Args extends Component {
                 else
                 className="args-item-value"
                 value={arg.value}
-                onChange={this.genOnConChange(i)}
+                onChange={store.onChangeCon.bind(store, i, null)}
               />
               <span
                 className="args-unit"
@@ -258,16 +206,16 @@ class Args extends Component {
               <span className="args-item-name">boundcount:</span>
               <InputNumber
                 className="args-item-value"
-                value={state.mkConfig.boundCount}
-                onChange={this.onChangeBoundCount}
+                value={store.mkConfig.boundCount}
+                onChange={store.onChangeBoundCount.bind(store)}
               />
             </div>
             <div className="mkconfig-item args-item">
               <span className="args-item-name">fluidCount:</span>
               <InputNumber
                 className="args-item-value"
-                value={state.mkConfig.fluidCount}
-                onChange={this.onChangeFluidCount}
+                value={store.mkConfig.fluidCount}
+                onChange={store.onChangeFluidCount.bind(store)}
               />
             </div>
           </Panel>
@@ -280,8 +228,8 @@ class Args extends Component {
               <span className="args-item-name">dp:</span>
               <InputNumber
                 className="args-item-value"
-                value={state.container.dp}
-                onChange={this.onChangeContainerDp}
+                value={store.container.dp}
+                onChange={store.onChangeContainerDp.bind(store)}
               />
             </div>
             <div className="defintion-item args-item">
@@ -290,22 +238,22 @@ class Args extends Component {
                 <div>
                   <span>X</span>
                   <InputNumber
-                    value={state.container.min[0]}
-                    onChange={this.genOnChangeContainer(0)}
+                    value={store.container.min[0]}
+                    onChange={store.onChangeContainer.bind(store, 0)}
                   />
                 </div>
                 <div>
                   <span>Y</span>
                   <InputNumber
-                    value={state.container.min[1]}
-                    onChange={this.genOnChangeContainer(1)}
+                    value={store.container.min[1]}
+                    onChange={store.onChangeContainer.bind(store, 1, false)}
                   />
                 </div>
                 <div>
                   <span>Z</span>
                   <InputNumber
-                    value={state.container.min[2]}
-                    onChange={this.genOnChangeContainer(2)}
+                    value={store.container.min[2]}
+                    onChange={store.onChangeContainer.bind(store, 2, false)}
                   />
                 </div>
               </div>
@@ -316,22 +264,22 @@ class Args extends Component {
                 <div>
                   <span>X</span>
                   <InputNumber
-                    value={state.container.max[0]}
-                    onChange={this.genOnChangeContainer(0, true)}
+                    value={store.container.max[0]}
+                    onChange={store.onChangeContainer.bind(store, 0, true)}
                   />
                 </div>
                 <div>
                   <span>Y</span>
                   <InputNumber
-                    value={state.container.max[1]}
-                    onChange={this.genOnChangeContainer(1, true)}
+                    value={store.container.max[1]}
+                    onChange={store.onChangeContainer.bind(store, 1, true)}
                   />
                 </div>
                 <div>
                   <span>Z</span>
                   <InputNumber
-                    value={state.container.max[2]}
-                    onChange={this.genOnChangeContainer(2, true)}
+                    value={store.container.max[2]}
+                    onChange={store.onChangeContainer.bind(store, 2, true)}
                   />
                 </div>
               </div>
@@ -386,9 +334,10 @@ class Args extends Component {
             header="execution.parameters (执行参数)"
             key="params"
           >
-            {state.params.map(this.renderParams)}
+            {store.params.map(this.renderParams)}
           </Panel>
         </Collapse>
+        <Button type="primary" icon="check">确认</Button>
       </div>
     );
   }

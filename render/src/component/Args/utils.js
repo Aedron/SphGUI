@@ -4,7 +4,7 @@ import { data } from '../../utils';
 
 const { remote } = window.require('electron');
 const { dialog } = remote.require('electron');
-const { fileTypes, fileTypeMap } = data;
+const { fileTypes } = data;
 
 
 

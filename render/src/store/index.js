@@ -3,6 +3,7 @@ import React from 'react';
 import { observable, action, computed } from 'mobx';
 import { message } from 'antd';
 
+import { loadTemplate } from './utils';
 import { hoc, data } from '../utils';
 
 
@@ -14,6 +15,9 @@ const {
 
 
 class Store {
+  /*
+  *** view
+   */
   @observable viewIndex = 1;
   @computed get view() {
     return this.views[this.viewIndex];
@@ -27,6 +31,9 @@ class Store {
   };
   views = ['model', 'args', 'editor', 'conf', 'about'];
 
+  /*
+  *** FileType
+   */
   @observable selectedFileTypes = ['xml', 'out', 'vtk'];
   @action selectFileType = (type) => {
     const index = this.selectedFileTypes.indexOf(type);
@@ -34,9 +41,45 @@ class Store {
     else this.selectedFileTypes.push(type);
   };
 
-  @observable argsType = '2d';
-  @action changeArgsType = (e) => {
-    this.argsType = e.target.value;
+  /*
+  *** Args
+   */
+  // 环境常量
+  @observable constants = loadTemplate('constants');
+  @action onChangeCon = (i, j, e) => {
+    const value = typeof e === 'object' ? e.target.value : e;
+    if (j || j === 0) {
+      this.constants[i].value[j][1] = value || 0;
+    } else {
+      this.constants[i].value = value || 0;
+    }
+  };
+  // 执行参数
+  @observable params = loadTemplate('params');
+  // Bundle 配置
+  @observable mkConfig = {
+    boundCount: 240,
+    fluidCount: 10
+  };
+  @action onChangeBoundCount = (value) => {
+    this.mkConfig.boundCount = value || 0;
+  };
+  @action onChangeFluidCount = (value) => {
+    this.mkConfig.fluidCount = value || 0;
+  };
+  // 容器
+  @observable container = {
+    dp: 0.005,
+    min: [0, 0, 0],
+    max: [2, 2, 2]
+  };
+  @observable onChangeContainerDp = (value) => {
+    this.container.dp = value || 0;
+  };
+  @observable onChangeContainer = (i, isMax, value) => {
+    const { container } = this;
+    let { min, max } = container;
+    (isMax ? max : min)[i] = value || 0;
   };
 
   /*
