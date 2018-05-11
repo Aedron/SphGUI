@@ -3,7 +3,7 @@ import React from 'react';
 import { observable, action, computed } from 'mobx';
 import { message } from 'antd';
 
-import { loadTemplate } from './utils';
+import { loadTemplate, genXML } from './utils';
 import { hoc, data } from '../utils';
 
 
@@ -216,7 +216,7 @@ class Store {
     if (checked) {
       switch (item) {
         case boxFillMap.SOLID: boxFill = [boxFillMap.SOLID]; break;
-        case boxFillMap.ALL: boxFill = boxFills.slice(1); break;
+        case boxFillMap.ALL: boxFill = [boxFillMap.ALL]; break;
         default: {
           boxFill = data.boxFill.filter(i => i !== boxFillMap.SOLID);
           boxFill.push(item);
@@ -301,7 +301,7 @@ class Store {
       },
       motion: null,
       float: null,
-      points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+      points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     };
     this.mainList.push(cylinder);
   };
@@ -323,6 +323,14 @@ class Store {
   @action onAddFill = () => {
     const file = {
       type: 'fill',
+      isFluid: true,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
+      transform: {
+        move: null,
+        scale: null,
+        rotate: null
+      },
       fillType: fillTypeMap.POINT,
       fillMode: [fillModeMap.FLUID],
       initial: {
@@ -672,6 +680,14 @@ class Store {
     const wave = this.waves[index];
     wave.direction[i] = v;
   };
+
+  /*
+  *** GenXML
+   */
+  genXML = () => {
+    const xml = genXML(this);
+    console.log(xml);
+  }
 }
 
 

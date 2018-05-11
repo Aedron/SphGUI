@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 
 import { Radio, Popconfirm, Button, Checkbox } from 'antd';
 import Point from '../Point';
+import Common from '../Common';
 import { data } from '../../../utils';
 import { withStore } from '../../../store';
 
@@ -48,68 +49,67 @@ class Fill extends Component {
 
     return (
       <div className="line mainlist-item">
-        <div className="mainlist-header">
-          <span>Fill (填充)</span>
-          <div>
+        <Common
+          store={store}
+          index={index}
+          name="Fill (填充)"
+        />
+        <div
+          className="mainlist-item"
+          style={{ margin: '12px' }}
+        >
+          <div className="mainlist-header">
+            <span>特征参数</span>
             <RadioGroup
               onChange={store.onChangeFillType.bind(store, index)}
               value={data.fillType}
+              style={{ margin: 0 }}
             >
               <RadioButton
                 for={f in fillTypes}
                 value={f}
                 key={f}
+                style={{ margin: 0 }}
               >{f}</RadioButton>
             </RadioGroup>
-            <Popconfirm
-              title="确定删除该物件?"
-              onConfirm={store.onDeleteObject.bind(store, index)}
-              okText="确认"
-              cancelText="取消"
-            >
-              <Button
-                type="danger"
-                icon="delete"
-              >删除</Button>
-            </Popconfirm>
+          </div>
+          <div className="mainlist-args">
+            <div className="mainlist-arg-item">
+              <span className="args-item-name">FillMode:</span>
+              <CheckboxGroup
+                options={fillModes.map(i => ({ label: i, value: i }))}
+                onChange={store.onChangeFillMode.bind(store, index)}
+                value={toJS(data.fillMode)}
+              />
+            </div>
+            <div className="mainlist-arg-item">
+              <span className="args-item-name">起始点:</span>
+              <Point point={toJS(data.point)} onChange={store.onChangeSinglePoint.bind(store, index)}/>
+            </div>
+            <div if={data.fillType === fillTypeMap.BOX} className="mainlist-arg-item">
+              <span className="args-item-name">顶点: </span>
+              <Point point={toJS(data.points[0])} onChange={store.onChangePoint.bind(store, index, 0)} />
+            </div>
+            <div if={data.fillType === fillTypeMap.BOX} className="mainlist-arg-item">
+              <span className="args-item-name">棱长: </span>
+              <Point point={toJS(data.points[1])} onChange={store.onChangePoint.bind(store, index, 1)} />
+            </div>
           </div>
         </div>
-        <div className="mainlist-args">
-          <div className="mainlist-arg-item">
-            <span className="args-item-name">FillMode:</span>
-            <CheckboxGroup
-              options={fillModes.map(i => ({ label: i, value: i }))}
-              onChange={store.onChangeFillMode.bind(store, index)}
-              value={toJS(data.fillMode)}
-            />
+        <div
+          className="line-points mainlist-item"
+          if={[fillTypeMap.FIGURE, fillTypeMap.PRISM].includes(data.fillType)}
+          style={{ margin: '12px' }}
+        >
+          <div className="mainlist-header">
+            <span>点坐标</span>
+            <Button
+              icon="plus"
+              onClick={store.onAddPoint.bind(store, index)}
+            >添加点</Button>
           </div>
-          <div className="mainlist-arg-item">
-            <span className="args-item-name">起始点:</span>
-            <Point point={toJS(data.point)} onChange={store.onChangeSinglePoint.bind(store, index)}/>
-          </div>
-          <div if={data.fillType === fillTypeMap.BOX} className="mainlist-arg-item">
-            <span className="args-item-name">顶点: </span>
-            <Point point={toJS(data.points[0])} onChange={store.onChangePoint.bind(store, index, 0)} />
-          </div>
-          <div if={data.fillType === fillTypeMap.BOX} className="mainlist-arg-item">
-            <span className="args-item-name">棱长: </span>
-            <Point point={toJS(data.points[1])} onChange={store.onChangePoint.bind(store, index, 1)} />
-          </div>
-          <div
-            className="line-points mainlist-item"
-            if={[fillTypeMap.FIGURE, fillTypeMap.PRISM].includes(data.fillType)}
-            style={{ margin: '6px 0 0 0' }}
-          >
-            <div className="mainlist-header">
-              <span>点坐标</span>
-              <Button
-                icon="plus"
-                onClick={store.onAddPoint.bind(store, index)}
-              >添加点</Button>
-            </div>
-            <div className="mainlist-args">
-              { data.points.map(this.renderPoint) }
-            </div>
+          <div className="mainlist-args">
+            { data.points.map(this.renderPoint) }
           </div>
         </div>
       </div>

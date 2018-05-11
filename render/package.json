@@ -10,7 +10,8 @@
     "react-app-rewire-mobx": "^1.0.8",
     "react-app-rewired": "^1.5.2",
     "react-dom": "^16.3.2",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "xml-formatter": "^1.0.1"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.7.0",

@@ -41,6 +41,14 @@ class Args extends Component {
   state = {
     showAdd: true
   };
+  componentDidMount = () => {
+    this.onAdd('fill');
+    this.props.store.genXML();
+  };
+  onOk = () => {
+    // this.props.store.toggleView('model');
+    this.props.store.genXML();
+  };
   // mainlist
   onAdd = (type) => {
     const { props: { store } } = this;
@@ -157,68 +165,8 @@ class Args extends Component {
       <div className={`args ${store.view === 'args' ? 'active' : ''}`}>
         <Collapse
           bordered={false}
-          defaultActiveKey={['wave']}
+          defaultActiveKey={['defintion', 'mainlist', 'wave',]}
         >
-          {/*constant*/}
-          <Panel
-            header="constantsdef (环境常量)"
-            key="constants"
-          >
-            <div
-              for={(arg, i) in store.constants}
-              key={arg.name}
-              className={"args-item"}
-            >
-              <p className="args-item-name">{arg.displayName || arg.name}:</p>
-              <div
-                if={Array.isArray(toJS(arg.value))}
-                className="args-item-values"
-              >
-                <div
-                  for={(subArg, j) in arg.value}
-                  key={subArg[0]}
-                >
-                  <span>{subArg[0]}</span>
-                  <InputNumber
-                    value={subArg[1]}
-                    onChange={store.onChangeCon.bind(store, i, j)}
-                  />
-                </div>
-              </div>
-              <InputNumber
-                else
-                className="args-item-value"
-                value={arg.value}
-                onChange={store.onChangeCon.bind(store, i, null)}
-              />
-              <span
-                className="args-unit"
-                if={arg.unit}
-              >({arg.unit})</span>
-            </div>
-          </Panel>
-          {/*bundle*/}
-          <Panel
-            header="mkconfig (bundle配置)"
-            key="mkconfig"
-          >
-            <div className="mkconfig-item args-item">
-              <span className="args-item-name">boundcount:</span>
-              <InputNumber
-                className="args-item-value"
-                value={store.mkConfig.boundCount}
-                onChange={store.onChangeBoundCount.bind(store)}
-              />
-            </div>
-            <div className="mkconfig-item args-item">
-              <span className="args-item-name">fluidCount:</span>
-              <InputNumber
-                className="args-item-value"
-                value={store.mkConfig.fluidCount}
-                onChange={store.onChangeFluidCount.bind(store)}
-              />
-            </div>
-          </Panel>
           {/*container*/}
           <Panel
             header="geometry.defintion (容器设置)"
@@ -328,6 +276,44 @@ class Args extends Component {
               style={{ width: '100%' }}
             >添加波浪</Button>
           </Panel>
+          {/*constant*/}
+          <Panel
+            header="constantsdef (环境常量)"
+            key="constants"
+          >
+            <div
+              for={(arg, i) in store.constants}
+              key={arg.name}
+              className={"args-item"}
+            >
+              <p className="args-item-name">{arg.displayName || arg.name}:</p>
+              <div
+                if={Array.isArray(toJS(arg.value))}
+                className="args-item-values"
+              >
+                <div
+                  for={(subArg, j) in arg.value}
+                  key={subArg[0]}
+                >
+                  <span>{subArg[0]}</span>
+                  <InputNumber
+                    value={subArg[1]}
+                    onChange={store.onChangeCon.bind(store, i, j)}
+                  />
+                </div>
+              </div>
+              <InputNumber
+                else
+                className="args-item-value"
+                value={arg.value}
+                onChange={store.onChangeCon.bind(store, i, null)}
+              />
+              <span
+                className="args-unit"
+                if={arg.unit}
+              >({arg.unit})</span>
+            </div>
+          </Panel>
           {/*params*/}
           <Panel
             className="params"
@@ -336,8 +322,34 @@ class Args extends Component {
           >
             {store.params.map(this.renderParams)}
           </Panel>
+          {/*bundle*/}
+          <Panel
+            header="mkconfig (bundle配置)"
+            key="mkconfig"
+          >
+            <div className="mkconfig-item args-item">
+              <span className="args-item-name">boundcount:</span>
+              <InputNumber
+                className="args-item-value"
+                value={store.mkConfig.boundCount}
+                onChange={store.onChangeBoundCount.bind(store)}
+              />
+            </div>
+            <div className="mkconfig-item args-item">
+              <span className="args-item-name">fluidCount:</span>
+              <InputNumber
+                className="args-item-value"
+                value={store.mkConfig.fluidCount}
+                onChange={store.onChangeFluidCount.bind(store)}
+              />
+            </div>
+          </Panel>
         </Collapse>
-        <Button type="primary" icon="check">确认</Button>
+        <Button
+          type="primary"
+          icon="check"
+          onClick={this.onOk}
+        >生成算例</Button>
       </div>
     );
   }
