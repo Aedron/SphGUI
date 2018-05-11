@@ -8,6 +8,7 @@ import { Button, Input } from 'antd';
 import Header from '../Common/Header';
 import Transform from '../Common/Transform';
 import Point from '../Point';
+import Common from '../Common';
 import { withStore } from '../../../store';
 
 import "./index.scss";
@@ -27,11 +28,10 @@ class File extends Component {
 
     return (
       <div className="line mainlist-item">
-        <Header
-          index={index}
+        <Common
           store={store}
+          index={index}
           name={`${data.fileType.toUpperCase()} (外部模型文件)`}
-          operator={() => {}}
         />
         <div className="mainlist-args">
           <div className="mainlist-arg-item" style={{ display: 'block' }}>

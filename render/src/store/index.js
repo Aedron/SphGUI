@@ -309,11 +309,20 @@ class Store {
   @action onAddFile = (path, type) => {
     const file = {
       type: 'file',
+      isFluid: false,
+      shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
+      drawMode: drawModeMap.FULL,
       transform: {
         move: null,
         scale: null,
         rotate: null
       },
+      initial: {
+        velocity: null,
+        wave: null
+      },
+      motion: null,
+      float: null,
       path: path,
       fileType: type
     };
@@ -321,7 +330,7 @@ class Store {
   };
   // Fill
   @action onAddFill = () => {
-    const file = {
+    const fill = {
       type: 'fill',
       isFluid: true,
       shapeMode: [shapeModeMap.REAL, shapeModeMap.BOUND],
@@ -331,18 +340,18 @@ class Store {
         scale: null,
         rotate: null
       },
-      fillType: fillTypeMap.POINT,
-      fillMode: [fillModeMap.FLUID],
       initial: {
         velocity: null,
         wave: null
       },
       motion: null,
       float: null,
+      fillType: fillTypeMap.POINT,
+      fillMode: [fillModeMap.FLUID],
       point: [0, 0, 0],
       points: []
     };
-    this.mainList.push(file);
+    this.mainList.push(fill);
   };
   @action onChangeFillType = (index, { target: { value } }) => {
     const data = this.mainList[index];

@@ -51,11 +51,11 @@ const fileTypeMap = {
   STL: 'stl'
 };
 
-const fillTypes = ['point', 'box', 'figure', 'prism'];
+const fillTypes = ['point', 'box', 'prism'];
 const fillTypeMap = {
   POINT: 'point',
   BOX: 'box',
-  FIGURE: 'figure',
+  // FIGURE: 'figure',
   PRISM: 'prism'
 };
 

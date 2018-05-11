@@ -1,4 +1,9 @@
 
+import { data } from '../../utils';
+
+const { fillTypeMap } = data;
+
+
 function getMainList(mainlist) {
   const m = mainlist.map((m, index) => {
     const { type } = m;
@@ -16,6 +21,7 @@ function getMainList(mainlist) {
       case 'sphere': genCommand = genSphere; break;
       case 'cylinder': genCommand = genCylinder; break;
       case 'beach': genCommand = genBeach; break;
+      case 'fill': genCommand = genFill; break;
       default: genCommand = () => ""; break;
     }
     const command = genCommand(m, index);
@@ -113,6 +119,35 @@ function genBeach(beach) {
     points.map(genPoint).join('\n'),
     `</drawsphere>`
   ].join('\n');
+}
+
+// fill
+function genFill(fill) {
+  const { fillType, fillMode, point: [x, y, z], points } = fill;
+  const mode = `<modefill>${fillMode.join(' | ')}</modefill>`;
+  switch (fillType) {
+    case fillTypeMap.POINT: {
+      return `<fillpoint x="${x}" y="${y}" z="${z}">${mode}</fillpoint>`;
+    }
+    case fillTypeMap.BOX: {
+      const [point, [sx, sy, sz]] = points;
+      return [
+        `<fillbox x="${x}" y="${y}" z="${z}">`,
+        mode,
+        genPoint(point),
+        `<size x="${sx}" y="${sy}" z="${sz}" />`,
+        `</fillbox>`
+      ].join('\n');
+    }
+    case fillTypeMap.PRISM: {
+      return [
+        `<fillprism x="${x}" y="${y}" z="${z}">`,
+        mode,
+        points.map(genPoint).join('\n'),
+        `</fillprism>`
+      ].join('\n');
+    }
+  }
 }
 
 // line
