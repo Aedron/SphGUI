@@ -437,7 +437,10 @@ class Store {
     const { float } = this.mainList[index];
     float[attr][i] = v;
   };
-  // Motion
+
+  /*
+  *** Motion
+   */
   @action onToggleMotion = (index) => {
     const data = this.mainList[index];
     if (data.motion) {
@@ -545,6 +548,86 @@ class Store {
   @action onChangeMotionValue = (index, i, key, value) => {
     const { motion } = this.mainList[index];
     motion[i][key] = value;
+  };
+  /*
+  *** Wave
+   */
+  @observable waves = [];
+  @computed get waveTimeLine() {
+    return this.waves.reduce((accu, i) => {
+      const { length } = accu;
+      if (length) {
+        const last = accu[length - 1];
+        accu.push([last[1], last[1] + i.duration]);
+      } else {
+        accu.push([0, i.duration]);
+      }
+      return accu;
+    }, []);
+  }
+  @action onAddWave = () => {
+    const wave = {
+      isRegular: true,
+      duration: 1,
+      depth: 0,
+      fixedDepth: 0,
+      direction: [1, 0, 0],
+      height: 0.1,
+      period: 0.1,
+      phase: 0,
+      ramp: 0,
+      // irregular
+      spectrum: null,
+      discretization: null,
+      peakCoef: null,
+      waves: null,
+      randomSeed: null,
+      serieIni: null,
+      rampTime: null
+    };
+    this.waves.push(wave);
+  };
+  @action onDeleteWave = (index) => {
+    this.waves.splice(index, 1);
+  };
+  @action onChangeWaveType = (index, {target: { value }}) => {
+    const wave = this.waves[index];
+    wave.isRegular = value;
+    if (!value) {
+      wave.spectrum = {
+        value: 'Jonswap',
+          options: ['Jonswap', 'Pierson-moskowitz']
+      };
+      wave.discretization = {
+        value: 'Stretched',
+          options: ['Regular', 'Random', 'Stretched', 'Cosstretched']
+      };
+      wave.peakCoef = 3.3;
+      wave.waves = 50;
+      wave.randomSeed = 2;
+      wave.serieIni = 0;
+      wave.rampTime = 0;
+    } else {
+      wave.spectrum = null;
+      wave.discretization = null;
+      wave.peakCoef = null;
+      wave.waves = null;
+      wave.randomSeed = null;
+      wave.serieIni = null;
+      wave.rampTime = null;
+    }
+  };
+  @action onChangeWaveValue = (index, key, v) => {
+    const wave = this.waves[index];
+    wave[key] = v || 0;
+  };
+  @action onChangeWaveOption = (index, key, {target: { value }}) => {
+    const wave = this.waves[index];
+    wave[key].value = value || 0;
+  };
+  @action onChangeWaveDirection = (index, i, v) => {
+    const wave = this.waves[index];
+    wave.direction[i] = v;
   };
 }
 

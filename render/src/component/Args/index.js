@@ -16,6 +16,7 @@ import Cylinder from './Cylinder';
 import Beach from './Beach';
 import File from './File';
 import Fill from './Fill';
+import Wave from './Wave';
 
 import { loadTemplate, importFile } from './utils';
 import { data } from '../../utils';
@@ -189,6 +190,9 @@ class Args extends Component {
       </div>
     )
   };
+  renderWave = (w, index) => {
+    return <Wave key={index} index={index} />
+  };
 
   render() {
     const { state, props: { store } } = this;
@@ -205,8 +209,9 @@ class Args extends Component {
         </RadioGroup>
         <Collapse
           bordered={false}
-          defaultActiveKey={['mainlist', 'params']}
+          defaultActiveKey={['wave']}
         >
+          {/*constant*/}
           <Panel
             header="constantsdef (环境常量)"
             key="constants"
@@ -244,6 +249,7 @@ class Args extends Component {
               >({arg.unit})</span>
             </div>
           </Panel>
+          {/*bundle*/}
           <Panel
             header="mkconfig (bundle配置)"
             key="mkconfig"
@@ -265,6 +271,7 @@ class Args extends Component {
               />
             </div>
           </Panel>
+          {/*container*/}
           <Panel
             header="geometry.defintion (容器设置)"
             key="defintion"
@@ -330,6 +337,7 @@ class Args extends Component {
               </div>
             </div>
           </Panel>
+          {/*mainlist*/}
           <Panel
             className="mainlist"
             header="geometry.commands.mainlist (物件设置)"
@@ -359,13 +367,20 @@ class Args extends Component {
               onClick={this.onToggleShowAdd}
             >添加物件</Button>
           </Panel>
+          {/*wave*/}
           <Panel
             className="wave"
             header="execution.special.wavePaddles (波浪设置)"
             key="wave"
           >
-
+            {store.waves.map(this.renderWave)}
+            <Button
+              icon="plus"
+              onClick={store.onAddWave}
+              style={{ width: '100%' }}
+            >添加波浪</Button>
           </Panel>
+          {/*params*/}
           <Panel
             className="params"
             header="execution.parameters (执行参数)"
