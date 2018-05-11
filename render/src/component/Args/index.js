@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import {
   Collapse, Radio, Tag, InputNumber,
-  Button
+  Button, Input, Switch
 } from 'antd';
 
 import Line from './Line';
@@ -28,8 +28,7 @@ const { remote } = window.require('electron');
 const { typesMap } = data;
 const { Panel } = Collapse;
 const { Group: ButtonGroup } = Button;
-const { Button: RadioButton } = Radio;
-const { Group: RadioGroup } = Radio;
+const { Button: RadioButton, Group: RadioGroup } = Radio;
 const { CheckableTag } = Tag;
 
 
@@ -39,6 +38,7 @@ const { CheckableTag } = Tag;
 class Args extends Component {
   state = {
     constants: loadTemplate('constants'),
+    params: loadTemplate('params'),
     mkConfig: {
       boundCount: 240,
       fluidCount: 10
@@ -48,7 +48,7 @@ class Args extends Component {
       min: [0, 0, 0],
       max: [2, 2, 2]
     },
-    showAdd: true
+    showAdd: false
   };
 
   genOnConChange = (i, j) => {
@@ -89,14 +89,45 @@ class Args extends Component {
   };
 
   // mainlist
+  onAdd = (type) => {
+    const { props: { store } } = this;
+    this.onToggleShowAdd();
+    switch (type) {
+      case 'file': return this.onAddFile();
+      case 'line': return store.onAddLine();
+      case 'triangle': return store.onAddTriangle();
+      case 'pyramid': return store.onAddPyramid();
+      case 'prism': return store.onAddPrism();
+      case 'box': return store.onAddBox();
+      case 'sphere': return store.onAddSphere();
+      case 'cylinder': return store.onAddCylinder();
+      case 'beach': return store.onAddBeach();
+      case 'fill': return store.onAddFill();
+    }
+  };
   onToggleShowAdd = () => this.setState({ showAdd: !this.state.showAdd });
   onAddFile = async () => {
     const { props: { store } } = this;
     const files = await importFile();
+    if (!files) return;
     files.forEach((path) => {
       const type = path.split('.').pop();
       store.onAddFile(path, type);
     });
+  };
+  genOnParamsChange = (i) => {
+    return (e) => {
+      const { params } = this.state;
+      params[i].value = typeof e === 'object' ? e.target.value : e;
+      return this.setState({ params })
+    };
+  };
+  genOnParamsCheck = (i) => {
+    return (checked) => {
+      const { params } = this.state;
+      params[i].disable = !checked;
+      return this.setState({ params })
+    };
   };
   renderMainList = (o, index) => {
     const { type } = o;
@@ -118,6 +149,46 @@ class Args extends Component {
     }
     return <Component key={index} index={index} />
   };
+  renderParams = (p, i) => {
+    const { name, displayName, value, disable, unit, options } = p;
+    const onChange = this.genOnParamsChange(i);
+    const onChecked = this.genOnParamsCheck(i);
+    const Component = typeof value === 'number' ? InputNumber : Input;
+    const inputStyle = {
+      width: '180px'
+    };
+    return (
+      <div
+        className="args-item"
+        key={i}
+      >
+        <Switch checked={!disable} onChange={onChecked} size="small" />
+        <span className="args-item-name">{displayName || name}:</span>
+        <RadioGroup
+          if={options}
+          value={value}
+          onChange={onChange}
+          disabled={disable}
+          className="args-item-value"
+        >
+          <Radio
+            for={k in Object.keys(options).map(i => parseInt(i))}
+            value={k}
+            key={k}
+          >{options[k]}</Radio>
+        </RadioGroup>
+        <Component
+          else
+          value={value}
+          onChange={onChange}
+          disabled={disable}
+          className="args-item-value"
+          style={inputStyle}
+        />
+        <span if={unit} className="args-unit">({unit})</span>
+      </div>
+    )
+  };
 
   render() {
     const { state, props: { store } } = this;
@@ -134,7 +205,7 @@ class Args extends Component {
         </RadioGroup>
         <Collapse
           bordered={false}
-          defaultActiveKey={['mainlist']}
+          defaultActiveKey={['mainlist', 'params']}
         >
           <Panel
             header="constantsdef (环境常量)"
@@ -271,22 +342,36 @@ class Args extends Component {
                 icon="close"
                 onClick={this.onToggleShowAdd}
               >取消</Button>
-              <Button icon="folder-open" onClick={this.onAddFile}>导入</Button>
-              <Button onClick={store.onAddLine}>线</Button>
-              <Button onClick={store.onAddTriangle}>三角</Button>
-              <Button onClick={store.onAddPyramid}>棱锥</Button>
-              <Button onClick={store.onAddPrism}>棱柱</Button>
-              <Button onClick={store.onAddBox}>立方体</Button>
-              <Button onClick={store.onAddSphere}>球</Button>
-              <Button onClick={store.onAddCylinder}>圆柱</Button>
-              <Button onClick={store.onAddBeach}>Beach</Button>
-              <Button onClick={store.onAddFill}>填充</Button>
+              <Button icon="folder-open" onClick={() => this.onAdd('file')}>导入</Button>
+              <Button onClick={() => this.onAdd('line')}>线</Button>
+              <Button onClick={() => this.onAdd('triangle')}>三角</Button>
+              <Button onClick={() => this.onAdd('pyramid')}>棱锥</Button>
+              <Button onClick={() => this.onAdd('prism')}>棱柱</Button>
+              <Button onClick={() => this.onAdd('box')}>立方体</Button>
+              <Button onClick={() => this.onAdd('sphere')}>球</Button>
+              <Button onClick={() => this.onAdd('cylinder')}>圆柱</Button>
+              <Button onClick={() => this.onAdd('beach')}>Beach</Button>
+              <Button onClick={() => this.onAdd('fill')}>填充</Button>
             </ButtonGroup>
             <Button
               else
               icon="plus"
               onClick={this.onToggleShowAdd}
             >添加物件</Button>
+          </Panel>
+          <Panel
+            className="wave"
+            header="execution.special.wavePaddles (波浪设置)"
+            key="wave"
+          >
+
+          </Panel>
+          <Panel
+            className="params"
+            header="execution.parameters (执行参数)"
+            key="params"
+          >
+            {state.params.map(this.renderParams)}
           </Panel>
         </Collapse>
       </div>

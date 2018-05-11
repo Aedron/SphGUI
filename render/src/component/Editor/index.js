@@ -10,17 +10,17 @@ import "./index.scss";
 
 @withStore
 @observer
-class Trans extends Component {
+class Editor extends Component {
   render() {
     const { store } = this.props;
 
     return (
-      <div className={`trans ${store.view === 'trans' ? 'active' : ''}`}>
-        <h1>Trans</h1>
+      <div className={`trans ${store.view === 'editor' ? 'active' : ''}`}>
+        <h1>Editor</h1>
       </div>
     );
   }
 }
 
 
-export default Trans;
+export default Editor;

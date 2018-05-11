@@ -5,7 +5,7 @@ import { message } from 'antd';
 import Nav from './component/Nav';
 import Model from './component/Model';
 import Args from './component/Args';
-import Trans from './component/Trans';
+import Editor from './component/Editor';
 import Conf from './component/Conf';
 import About from './component/About';
 
@@ -19,7 +19,7 @@ function App() {
       <Nav />
       <Model />
       <Args />
-      <Trans />
+      <Editor />
       <Conf />
       <About />
     </div>

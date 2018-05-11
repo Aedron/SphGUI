@@ -25,7 +25,7 @@ class Store {
       if (index >= 0) this.viewIndex = index;
     }
   };
-  views = ['model', 'args', 'trans', 'conf', 'about'];
+  views = ['model', 'args', 'editor', 'conf', 'about'];
 
   @observable selectedFileTypes = ['xml', 'out', 'vtk'];
   @action selectFileType = (type) => {

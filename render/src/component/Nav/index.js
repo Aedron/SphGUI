@@ -8,8 +8,8 @@ import "./index.scss";
 
 import Model from '../../static/pics/模型0.svg';
 import ModelActive from '../../static/pics/模型1.svg';
-import Args from '../../static/pics/参数0.svg';
-import ArgsActive from '../../static/pics/参数1.svg';
+import Editor from '../../static/pics/参数0.svg';
+import EditorActive from '../../static/pics/参数1.svg';
 import Trans from '../../static/pics/格式0.svg';
 import TransActive from '../../static/pics/格式1.svg';
 import Conf from '../../static/pics/首选项0.svg';
@@ -25,8 +25,8 @@ import AboutActive from '../../static/pics/关于1.svg';
 class Nav extends Component {
   items = [
     ["模型生成", Model, ModelActive, 'model'],
-    ["参数编辑", Args, ArgsActive, 'args'],
-    ["格式转换", Trans, TransActive, 'trans'],
+    ["算例生成", Trans, TransActive, 'args'],
+    ["XML编辑", Editor, EditorActive, 'editor'],
     ["首选项", Conf, ConfActive, 'conf'],
     ["关于信息", About, AboutActive, 'about']
   ];

@@ -134,4 +134,14 @@
       }
     }
   }
+
+  .params {
+    .args-item {
+      display: flex;
+      height: 32px;
+      & > * {
+        margin-right: 20px;
+      }
+    }
+  }
 }
