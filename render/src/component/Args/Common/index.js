@@ -12,6 +12,7 @@ import Transform from './Transform';
 import Initial from './Initial';
 import Float from './Float';
 import Motion from './Motion';
+import Wave from './Wave';
 
 import './index.scss';
 
@@ -128,6 +129,7 @@ function Common(props) {
     </div>,
     <Float key="2" store={store} index={index}/>,
     <Motion key="3" store={store} index={index}/>,
+    <Wave key="4" store={store} index={index}/>
   ];
 }
 

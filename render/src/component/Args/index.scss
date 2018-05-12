@@ -94,6 +94,7 @@
     border-radius: 4px;
     margin-bottom: 20px;
     .mainlist-header, .wave-header {
+      min-height: 45px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -107,7 +108,7 @@
         margin: 0 0 0 8px;
       }
     }
-    .mainlist-args, .wave-args {
+    .mainlist-args {
       padding: 12px 16px;
     }
     .mainlist-arg-item, .wave-arg-item {

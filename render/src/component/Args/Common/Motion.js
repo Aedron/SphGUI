@@ -384,6 +384,7 @@ function Float(props) {
   }
 }
 
+
 Float.propTypes = {
   store: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired

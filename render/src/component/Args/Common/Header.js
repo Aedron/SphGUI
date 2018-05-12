@@ -13,6 +13,7 @@ function Header(props) {
   const {
     transform: {move, scale, rotate},
     initial: {velocity, wave},
+    wave: {regular, irregular},
     float, motion
   } = data;
 
@@ -54,9 +55,9 @@ function Header(props) {
 
         <ButtonGroup>
           <Popconfirm
-            if={motion}
+            if={regular}
             title="确定删除规则波属性?"
-            onConfirm={store.onToggleMotion.bind(store, index)}
+            onConfirm={store.onToggleWave.bind(store, index, true)}
             okText="确认"
             cancelText="取消"
           >
@@ -65,13 +66,13 @@ function Header(props) {
           <Button
             else
             icon="forward"
-            onClick={store.onToggleMotion.bind(store, index)}
+            onClick={store.onToggleWave.bind(store, index, true)}
           >规则波</Button>
 
           <Popconfirm
-            if={motion}
+            if={irregular}
             title="确定删除不规则波属性?"
-            onConfirm={store.onToggleMotion.bind(store, index)}
+            onConfirm={store.onToggleWave.bind(store, index, false)}
             okText="确认"
             cancelText="取消"
           >
@@ -80,7 +81,7 @@ function Header(props) {
           <Button
             else
             icon="forward"
-            onClick={store.onToggleMotion.bind(store, index)}
+            onClick={store.onToggleWave.bind(store, index, false)}
           >不规则波</Button>
         </ButtonGroup>
 
