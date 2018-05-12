@@ -219,6 +219,36 @@ function genPauseMotion(motion, id, isLast) {
 }
 // Wave
 function genWave(waves) {
+  if (!waves) return '';
+  return waves.map((wave, index) => {
+    return (wave.isRegular ?
+      genRegularWave : genIrregularWave
+    )(wave, index);
+  });
+}
+function genRegularWave(wave, index) {
+  const {
+    duration, depth, fixedDepth, direction,
+    height, period, phase, ramp
+  } = wave;
+  return [
+    `<piston>`,
+    `<mkbound value="10" comment="Mk-Bound of selected particles" />`,
+    `<waveorder value="2" comment="Order wave generation 1:1st order, 2:2nd order (def=1)" />`,
+    `<start value="0" comment="Start time (def=0)" />`,
+    `<duration value="0" comment="Movement duration, Zero is the end of simulation (def=0)" />`,
+    `<depth value="0.27" comment="Fluid depth (def=0)" />`,
+    `<fixeddepth value="0" comment="Fluid depth without paddle (def=0)" />`,
+    `<pistondir x="1" y="0" z="0" comment="Movement direction (def=(1,0,0))" />`,
+    `<waveheight value="0.1" comment="Wave height" />`,
+    `<waveperiod value="1.3" comment="Wave period" />`,
+    `<phase value="0" comment="Initial wave phase in function of PI (def=0)" />`,
+    `<ramp value="0" comment="Periods of ramp (def=0)" />`,
+    `<savemotion periods="24" periodsteps="20" xpos="2" zpos="-0.15" />`,
+    `</piston>`
+  ].join('\n');
+}
+function genIrregularWave(wave, index) {
 
 }
 

@@ -30,12 +30,11 @@ class Wave extends Component {
       discretization, peakCof, waves,
       randomSeed, serieIni, rampTime
     } = store.waves[index];
-    const time = store.waveTimeLine[index];
 
     return (
       <div className="wave-item">
         <div className="wave-header">
-          <span>时间轴: {time[0]} ~ {time[1]} 秒</span>
+          <span>{isRegular ? '规则波' : '不规则波'}</span>
           <div>
             <RadioGroup value={isRegular} onChange={store.onChangeWaveType.bind(store, index)}>
               <RadioButton value={true}>规则波</RadioButton>

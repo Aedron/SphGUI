@@ -93,13 +93,13 @@ function Common(props) {
               okText="确认"
               cancelText="取消"
             >
-              <Button type="primary" icon="right">速度</Button>
+              <Button type="primary" icon="right">初始速度</Button>
             </Popconfirm>
             <Button
               else
               icon="right"
               onClick={store.onToggleInitVelocity.bind(store, index)}
-            >速度</Button>
+            >初始速度</Button>
 
             <Popconfirm
               if={wave}
@@ -108,13 +108,13 @@ function Common(props) {
               okText="确认"
               cancelText="取消"
             >
-              <Button type="primary" icon="double-right">波浪</Button>
+              <Button type="primary" icon="double-right">初始波浪</Button>
             </Popconfirm>
             <Button
               else
               icon="double-right"
               onClick={store.onToggleInitWave.bind(store, index)}
-            >波浪</Button>
+            >初始波浪</Button>
           </ButtonGroup>
         </div>
       </div>

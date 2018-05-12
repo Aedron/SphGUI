@@ -52,6 +52,38 @@ function Header(props) {
           >运动</Button>
         </ButtonGroup>
 
+        <ButtonGroup>
+          <Popconfirm
+            if={motion}
+            title="确定删除规则波属性?"
+            onConfirm={store.onToggleMotion.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button type="primary" icon="forward">规则波</Button>
+          </Popconfirm>
+          <Button
+            else
+            icon="forward"
+            onClick={store.onToggleMotion.bind(store, index)}
+          >规则波</Button>
+
+          <Popconfirm
+            if={motion}
+            title="确定删除不规则波属性?"
+            onConfirm={store.onToggleMotion.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button type="primary" icon="forward">不规则波</Button>
+          </Popconfirm>
+          <Button
+            else
+            icon="forward"
+            onClick={store.onToggleMotion.bind(store, index)}
+          >不规则波</Button>
+        </ButtonGroup>
+
         <Popconfirm
           title="确定删除该物件?"
           onConfirm={store.onDeleteObject.bind(store, index)}

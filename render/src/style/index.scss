@@ -23,6 +23,12 @@ body {
   }
 }
 
+.mainlist-arg-item {
+  height: 32px;
+  display: inline-flex;
+  justify-items: center;
+}
+
 .small-input.ant-input-number {
   width: 58px;
   margin-right: 16px;

@@ -17,7 +17,6 @@ import Cylinder from './Cylinder';
 import Beach from './Beach';
 import File from './File';
 import Fill from './Fill';
-import Wave from './Wave';
 
 import { importFile } from './utils';
 import { data } from '../../utils';
@@ -42,7 +41,7 @@ class Args extends Component {
     showAdd: true
   };
   componentDidMount = () => {
-    this.props.store.onAddWave();
+    this.onAdd('box');
     this.props.store.genXML();
   };
   onOk = () => {
@@ -154,9 +153,6 @@ class Args extends Component {
       </div>
     )
   };
-  renderWave = (w, index) => {
-    return <Wave key={index} index={index} />
-  };
 
   render() {
     const { state, props: { store } } = this;
@@ -262,19 +258,6 @@ class Args extends Component {
               icon="plus"
               onClick={this.onToggleShowAdd}
             >添加物件</Button>
-          </Panel>
-          {/*wave*/}
-          <Panel
-            className="wave"
-            header="execution.special.wavePaddles (波浪设置)"
-            key="wave"
-          >
-            {store.waves.map(this.renderWave)}
-            <Button
-              icon="plus"
-              onClick={store.onAddWave}
-              style={{ width: '100%' }}
-            >添加波浪</Button>
           </Panel>
           {/*constant*/}
           <Panel

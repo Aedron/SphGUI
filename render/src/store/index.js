@@ -19,9 +19,6 @@ class Store {
   *** view
    */
   @observable viewIndex = 1;
-  @computed get view() {
-    return this.views[this.viewIndex];
-  }
   @action toggleView = (view) => {
     if (typeof view === 'number') this.viewIndex = view;
     else {
@@ -29,8 +26,10 @@ class Store {
       if (index >= 0) this.viewIndex = index;
     }
   };
+  @computed get view() {
+    return this.views[this.viewIndex];
+  }
   views = ['model', 'args', 'editor', 'conf', 'about'];
-
   /*
   *** FileType
    */
@@ -40,12 +39,12 @@ class Store {
     if (index >= 0) this.selectedFileTypes.splice(index, 1);
     else this.selectedFileTypes.push(type);
   };
+  // 环境常量
+  @observable constants = loadTemplate('constants');
 
   /*
   *** Args
    */
-  // 环境常量
-  @observable constants = loadTemplate('constants');
   @action onChangeCon = (i, j, e) => {
     const value = typeof e === 'object' ? e.target.value : e;
     if (j || j === 0) {
@@ -81,7 +80,6 @@ class Store {
     let { min, max } = container;
     (isMax ? max : min)[i] = value || 0;
   };
-
   /*
   *** 主要的物件 mainlist
    */
@@ -101,6 +99,10 @@ class Store {
       initial: {
         velocity: null,
         wave: null
+      },
+      wave: {
+        regular: null,
+        irregular: null
       },
       motion: null,
       float: null,
@@ -123,6 +125,10 @@ class Store {
       initial: {
         velocity: null,
         wave: null
+      },
+      wave: {
+        regular: null,
+        irregular: null
       },
       motion: null,
       float: null,
@@ -159,6 +165,10 @@ class Store {
         velocity: null,
         wave: null
       },
+      wave: {
+        regular: null,
+        irregular: null
+      },
       motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -181,6 +191,10 @@ class Store {
         velocity: null,
         wave: null
       },
+      wave: {
+        regular: null,
+        irregular: null
+      },
       motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -202,6 +216,10 @@ class Store {
       initial: {
         velocity: null,
         wave: null
+      },
+      wave: {
+        regular: null,
+        irregular: null
       },
       motion: null,
       float: null,
@@ -253,6 +271,10 @@ class Store {
         velocity: null,
         wave: null
       },
+      wave: {
+        regular: null,
+        irregular: null
+      },
       motion: null,
       float: null,
       point: [0, 0, 0],
@@ -275,6 +297,10 @@ class Store {
       initial: {
         velocity: null,
         wave: null
+      },
+      wave: {
+        regular: null,
+        irregular: null
       },
       motion: null,
       float: null,
@@ -299,6 +325,10 @@ class Store {
         velocity: null,
         wave: null
       },
+      wave: {
+        regular: null,
+        irregular: null
+      },
       motion: null,
       float: null,
       points: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -320,6 +350,10 @@ class Store {
       initial: {
         velocity: null,
         wave: null
+      },
+      wave: {
+        regular: null,
+        irregular: null
       },
       motion: null,
       float: null,
@@ -343,6 +377,10 @@ class Store {
       initial: {
         velocity: null,
         wave: null
+      },
+      wave: {
+        regular: null,
+        irregular: null
       },
       motion: null,
       float: null,
@@ -377,7 +415,6 @@ class Store {
     const data = this.mainList[index];
     data.fillMode = checkedValues;
   };
-
   // 删除物件
   @action onDeleteObject = (index) => {
     this.mainList.splice(index, 1);
@@ -497,7 +534,6 @@ class Store {
     const { float } = this.mainList[index];
     float[attr][i] = v;
   };
-
   /*
   *** Motion
    */
@@ -630,91 +666,89 @@ class Store {
   /*
   *** Wave
    */
-  @observable waves = [];
-  @computed get waveTimeLine() {
-    return this.waves.reduce((accu, i) => {
-      const { length } = accu;
-      if (length) {
-        const last = accu[length - 1];
-        accu.push([last[1], last[1] + i.duration]);
+  @action onToggleWave = (index, isRegular) => {
+    const { wave } = this.mainList[index];
+    if (isRegular) {
+      if (wave.regular) {
+        wave.regular = null;
       } else {
-        accu.push([0, i.duration]);
+        this.onAddWave(index, true);
       }
-      return accu;
-    }, []);
-  }
-  @action onAddWave = () => {
-    const wave = {
-      isRegular: true,
-      duration: 1,
-      depth: 0,
-      fixedDepth: 0,
-      direction: [1, 0, 0],
-      height: 0.1,
-      period: 0.1,
-      phase: 0,
-      ramp: 0,
-      // irregular
-      spectrum: null,
-      discretization: null,
-      peakCoef: null,
-      waves: null,
-      randomSeed: null,
-      serieIni: null,
-      rampTime: null
-    };
-    this.waves.push(wave);
-  };
-  @action onDeleteWave = (index) => {
-    this.waves.splice(index, 1);
-  };
-  @action onChangeWaveType = (index, {target: { value }}) => {
-    const wave = this.waves[index];
-    wave.isRegular = value;
-    if (!value) {
-      wave.spectrum = {
-        value: 'Jonswap',
-          options: ['Jonswap', 'Pierson-moskowitz']
-      };
-      wave.discretization = {
-        value: 'Stretched',
-          options: ['Regular', 'Random', 'Stretched', 'Cosstretched']
-      };
-      wave.peakCoef = 3.3;
-      wave.waves = 50;
-      wave.randomSeed = 2;
-      wave.serieIni = 0;
-      wave.rampTime = 0;
     } else {
-      wave.spectrum = null;
-      wave.discretization = null;
-      wave.peakCoef = null;
-      wave.waves = null;
-      wave.randomSeed = null;
-      wave.serieIni = null;
-      wave.rampTime = null;
+      if (wave.irregular) {
+        wave.irregular = null;
+      } else {
+        this.onAddWave(index, false);
+      }
     }
   };
-  @action onChangeWaveValue = (index, key, v) => {
-    const wave = this.waves[index];
-    wave[key] = v || 0;
+  @action onAddWave = (index, isRegular) => {
+    const { wave } = this.mainList[index];
+    if (isRegular) {
+      wave.regular = {
+        duration: 1,
+        depth: 0,
+        fixedDepth: 0,
+        direction: [1, 0, 0],
+        height: 0.1,
+        period: 0.1,
+        phase: 0,
+        ramp: 0,
+        // irregular
+        spectrum: null,
+        discretization: null,
+        peakCoef: null,
+        waves: null,
+        randomSeed: null,
+        serieIni: null,
+        rampTime: null
+      };
+    } else {
+      wave.irregular = {
+        duration: 1,
+        depth: 0,
+        fixedDepth: 0,
+        direction: [1, 0, 0],
+        height: 0.1,
+        period: 0.1,
+        phase: 0,
+        ramp: 0,
+        // irregular
+        spectrum: {
+          value: 'Jonswap',
+          options: ['Jonswap', 'Pierson-moskowitz']
+        },
+        discretization: {
+          value: 'Stretched',
+          options: ['Regular', 'Random', 'Stretched', 'Cosstretched']
+        },
+        peakCoef: 3.3,
+        waves: 50,
+        randomSeed: 2,
+        serieIni: 0,
+        rampTime: 0
+      }
+    }
   };
-  @action onChangeWaveOption = (index, key, {target: { value }}) => {
-    const wave = this.waves[index];
-    wave[key].value = value || 0;
+  @action onChangeWaveValue = (index, isRegular, key, v) => {
+    const { wave: { regular, irregular } } = this.mainList[index];
+    (isRegular ? regular : irregular)[key] = v || 0;
   };
-  @action onChangeWaveDirection = (index, i, v) => {
-    const wave = this.waves[index];
-    wave.direction[i] = v;
+  @action onChangeWaveOption = (index, isRegular, key, {target: { value }}) => {
+    const { wave: { regular, irregular } } = this.mainList[index];
+    (isRegular ? regular : irregular)[key].value = value || 0;
   };
-
+  @action onChangeWaveDirection = (index, isRegular, i, v) => {
+    const { wave: { regular, irregular } } = this.mainList[index];
+    (isRegular ? regular : irregular).direction[i] = v;
+  };
   /*
   *** GenXML
    */
   genXML = () => {
     const xml = genXML(this);
     console.log(xml);
-  }
+  };
 }
 
 
