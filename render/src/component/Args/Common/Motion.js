@@ -4,6 +4,7 @@ import { toJS } from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Radio, Timeline, InputNumber} from 'antd';
 
+import { genTimeLine } from '../../../utils';
 import Point from '../Point';
 
 const {Group: RadioGroup, Button: RadioButton} = Radio;
@@ -14,16 +15,7 @@ const {Item: TimeItem}  = Timeline;
 function Float(props) {
   const { store, index } = props;
   const { motion: rawMotion } = store.mainList[index];
-  let start = 0;
-  const motion = (rawMotion || []).map((item, index) => {
-    if (index === 0) start = 0;
-    const i = {
-      ...item,
-      start: start
-    };
-    start += i.duration;
-    return i;
-  });
+  const motion = genTimeLine(rawMotion);
 
   return (
     <div if={rawMotion} className="line-points mainlist-item motion">
@@ -59,6 +51,7 @@ function Float(props) {
               <RadioButton value="linear">线性</RadioButton>
               <RadioButton value="rotate">旋转</RadioButton>
               <RadioButton value="sin">正弦</RadioButton>
+              <RadioButton value="pause">静止</RadioButton>
             </RadioGroup>
           </div>
         </div>
@@ -66,6 +59,7 @@ function Float(props) {
           {type === 'linear' && renderLinear(m, i)}
           {type === 'rotate' && renderRotate(m, i)}
           {type === 'sin' && renderSin(m, i)}
+          {type === 'pause' && renderPause(m, i)}
         </div>
       </div>
     );
@@ -210,7 +204,7 @@ function Float(props) {
   }
   function renderSin(m, i) {
     const {
-      start, duration, ref, axisp1,
+      duration, ref, axisp1,
       axisp2, freq, ampl, phase
     }  = m;
 
@@ -359,6 +353,19 @@ function Float(props) {
         />
       </div>,
     ];
+  }
+  function renderPause(m, i) {
+    const { duration }  = m;
+    return (
+      <div className="mainlist-arg-item">
+        <span className="args-item-name">持续时间: </span>
+        <InputNumber
+          min={0}
+          value={duration}
+          onChange={store.onChangeMotionDuration.bind(store, index, i)}
+        />
+      </div>
+    );
   }
 }
 

@@ -534,33 +534,51 @@ class Store {
   };
   @action onChangeMotionType = (index, i, {target: { value }}) => {
     const { motion } = this.mainList[index];
-    motion[i].type = value;
+    const m = motion[i];
+    m.type = value;
     switch (value) {
       case 'linear': {
-        motion[i].axisp1 = null;
-        motion[i].axisp2 = null;
-        motion[i].freq = null;
-        motion[i].ampl = null;
-        motion[i].phase = null;
-        motion[i].ref = null;
+        m.vel = motion.vel || [0, 0, 0];
+        m.ace = motion.ace || [0, 0, 0];
+        m.axisp1 = null;
+        m.axisp2 = null;
+        m.freq = null;
+        m.ampl = null;
+        m.phase = null;
+        m.ref = null;
         break;
       }
       case 'rotate': {
-        motion[i].axisp1 = motion.axisp1 || [0, 0, 0];
-        motion[i].axisp2 = motion.axisp2 || [0, 0, 0];
-        motion[i].freq = null;
-        motion[i].ampl = null;
-        motion[i].phase = null;
-        motion[i].ref = null;
+        m.vel = motion.vel || [0, 0, 0];
+        m.ace = motion.ace || [0, 0, 0];
+        m.axisp1 = motion.axisp1 || [0, 0, 0];
+        m.axisp2 = motion.axisp2 || [0, 0, 0];
+        m.freq = null;
+        m.ampl = null;
+        m.phase = null;
+        m.ref = null;
         break;
       }
       case 'sin': {
-        motion[i].axisp1 = null;
-        motion[i].axisp2 = null;
-        motion[i].freq = [0, 0, 0];
-        motion[i].ampl = [0, 0, 0];
-        motion[i].phase = [0, 0, 0];
-        motion[i].ref = null;
+        m.vel = motion.vel || [0, 0, 0];
+        m.ace = motion.ace || [0, 0, 0];
+        m.axisp1 = null;
+        m.axisp2 = null;
+        m.freq = [0, 0, 0];
+        m.ampl = [0, 0, 0];
+        m.phase = [0, 0, 0];
+        m.ref = null;
+        break;
+      }
+      case 'pause': {
+        m.vel = null;
+        m.ace = null;
+        m.axisp1 = null;
+        m.axisp2 = null;
+        m.freq = null;
+        m.ampl = null;
+        m.phase = null;
+        m.ref = null;
         break;
       }
     }

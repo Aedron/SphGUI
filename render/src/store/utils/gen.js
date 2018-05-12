@@ -1,10 +1,51 @@
 
-import { data } from '../../utils';
+import { toJS } from 'mobx';
+import { data, genTimeLine } from '../../utils';
+
 
 const { fillTypeMap } = data;
 
 
-function getMainList(mainlist) {
+/*
+*** XML Generator
+ */
+function genParams(params) {
+  const p = params.map(p => {
+    const { name, value, disable, unit } = p;
+    const k = disable ? `#${name}` : name;
+    return `<parameter ${genKV('key', k)}${genKV('value', value)}${genKV('units_comment', unit)}/>`
+  }).join('\n');
+  return `<parameters>${p}</parameters>`
+}
+
+function genDefinition(definition) {
+  const {dp, min, max} = definition;
+  return [
+    `<definition dp="${dp}" units_comment="metres (m)">`,
+    `<pointmin x="${min[0]}" y="${min[1]}" z="${min[2]}" />`,
+    `<pointmax x="${max[0]}" y="${max[1]}" z="${max[2]}" />`,
+    `</definition>`
+  ].join('\n')
+}
+
+function genMkConfig(mkConfig) {
+  const {boundCount, fluidCount} = mkConfig;
+  return `<mkconfig boundcount="${boundCount}" fluidcount="${fluidCount}" />\n`
+}
+
+function genConstants(constants) {
+  const v = constants.map((i) => {
+    let {name, value, displayName, unit} = i;
+    value = (Array.isArray(toJS(value)) ? value : [['value', value]])
+      .map(([k, v]) => genKV(k, v)).join('');
+    displayName = genKV('comment', displayName);
+    unit = genKV('units_comment', unit);
+    return `<${name} ${value}${displayName}${unit}/>`
+  }).join('\n');
+  return `<constantsdef>\n${v}\n</constantsdef>`
+}
+
+function genMainList(mainlist) {
   const m = mainlist.map((m, index) => {
     const { type } = m;
     const common = genCommon(m, index);
@@ -30,6 +71,92 @@ function getMainList(mainlist) {
   return `<mainlist>${m}</mainlist>`
 }
 
+function genInitials(mainlist) {
+  return mainlist.map((item, index) => {
+    const { isFluid, initial: { velocity, wave } } = item;
+    let initial = [];
+
+    const mk = genKV(isFluid ? 'mkfluid' : 'mkbound', index);
+    if (velocity) {
+      initial.push(`<velocity ${mk}${genKVS(velocity)}/>`);
+    }
+    if (wave) {
+      const [x, y, z] = wave;
+      initial.push(`<wave ${mk}${genKVS(wave)} />`);
+    }
+    return initial.join('\n');
+  }).filter(i => i.length).join('\n');
+}
+
+function genFloatings(mainlist) {
+  return mainlist.map((item, index) => {
+    const { isFluid, float } = item;
+    let floatings = [];
+
+    const mk = genKV(isFluid ? 'mkfluid' : 'mkbound', index);
+    if (float) {
+      const {
+        relativeweight, rhopbody, massbody,
+        center, inertia, velini, omegaini
+      } = float;
+      const rw = relativeweight ? genKV('relativeweight', relativeweight) : '';
+      floatings.push(`<floating ${mk}${rw}>`);
+      massbody && floatings.push(`<massbody value="${massbody}" />`);
+      rhopbody && floatings.push(`<rhopbody value="${rhopbody}" />`);
+      center && floatings.push(`<center ${genKVS(center)}/>`);
+      inertia && floatings.push(`<inertia ${genKVS(inertia)}/>`);
+      velini && floatings.push(`<velini ${genKVS(velini)}/>`);
+      omegaini && floatings.push(`<omegaini ${genKVS(omegaini)}/>`);
+      floatings.push(`</floating>`);
+    }
+    return floatings.join('\n');
+  }).filter(i => i.length).join('\n');
+}
+
+function genMotion(mainlist) {
+  return mainlist
+    .map(i => i.motion)
+    .map(genMotionItem)
+    .filter(i => i.trim())
+    .join('');
+}
+function genMotionItem(rawMotions, index) {
+  if (!rawMotions) return '';
+  const motions = genTimeLine(rawMotions).map((m, i) => {
+    switch (m.type) {
+      case 'linear': return genLinearMotion(m);
+      case 'rotate': return genRotateMotion(m);
+      case 'sin': return genSinMotion(m);
+      default: return '';
+    }
+  }).join('\n');
+  return `<objreal ref="${index}">${motions}</objreal>`
+}
+function genLinearMotion(motion) {
+  return '';
+}
+function genRotateMotion(motion) {
+  return '';
+}
+function genSinMotion(motion) {
+  return '';
+}
+
+
+/*
+*** 形状
+ */
+// line
+function genLine(line) {
+  const { points } = line;
+  return [
+    `<drawline>`,
+    points
+      .map(([x, y, z]) => `<point x="${x}" y="${y}" z="${z}" />`)
+      .join('\n'),
+    `</drawline>`
+  ].join('\n');
+}
 // triangle
 function genTriangles(triangle) {
   const { points } = triangle;
@@ -55,7 +182,6 @@ function genStrip(strip) {
     `</drawtrianglesstrip>`
   ].join('\n');
 }
-
 // pyramid
 function genPyramid(pyramid) {
   const { points } = pyramid;
@@ -65,7 +191,6 @@ function genPyramid(pyramid) {
     `</drawpyramid>`
   ].join('\n');
 }
-
 // prism
 function genPrism(prism) {
   const { points } = prism;
@@ -75,7 +200,6 @@ function genPrism(prism) {
     `</drawprism>`
   ].join('\n');
 }
-
 // box
 function genBox(box) {
   const {
@@ -90,7 +214,6 @@ function genBox(box) {
     `</drawbox>`
   ].join('\n');
 }
-
 // sphere
 function genSphere(sphere) {
   const { point, radius } = sphere;
@@ -100,7 +223,6 @@ function genSphere(sphere) {
     `</drawsphere>`
   ].join('\n');
 }
-
 // cylinder
 function genCylinder(cylinder) {
   const { points, radius } = cylinder;
@@ -110,7 +232,6 @@ function genCylinder(cylinder) {
     `</drawsphere>`
   ].join('\n');
 }
-
 // beach
 function genBeach(beach) {
   const { points } = beach;
@@ -120,7 +241,6 @@ function genBeach(beach) {
     `</drawsphere>`
   ].join('\n');
 }
-
 // fill
 function genFill(fill) {
   const { fillType, fillMode, point: [x, y, z], points } = fill;
@@ -150,19 +270,16 @@ function genFill(fill) {
   }
 }
 
-// line
-function genLine(line) {
-  const { points } = line;
-  return [
-    `<drawline>`,
-    points
-      .map(([x, y, z]) => `<point x="${x}" y="${y}" z="${z}" />`)
-      .join('\n'),
-    `</drawline>`
-  ].join('\n');
+/*
+*** utils
+ */
+function genKV(key, value) {
+  if (['', null, undefined].includes(value)) return '';
+  return `${key}="${value}" `;
 }
-
-// utils
+function genKVS(values, keys=['x', 'y', 'z']) {
+  return values.map((v, i) => genKV(keys[i], v)).join('');
+}
 function genPoint([x, y, z]) {
   return `<point x="${x}" y="${y}" z="${z}" />`;
 }
@@ -201,4 +318,13 @@ function genTransform(m) {
 }
 
 
-export default getMainList;
+export {
+  genParams,
+  genDefinition,
+  genMkConfig,
+  genConstants,
+  genMainList,
+  genInitials,
+  genFloatings,
+  genMotion
+};

@@ -42,7 +42,7 @@ class Args extends Component {
     showAdd: true
   };
   componentDidMount = () => {
-    this.onAdd('fill');
+    this.onAdd('box');
     this.props.store.genXML();
   };
   onOk = () => {
