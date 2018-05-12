@@ -116,12 +116,13 @@ function Float(props) {
     ]
   }
   function renderRotate(m, i) {
-    const { duration, vel, ace, ref } = m;
+    const { duration, vel, ace, ref, axisp1, axisp2 } = m;
 
     let type;
-    if (!ace) type = 'rot';
+    if (!ace && ace !== 0) type = 'rot';
     else if (!ref) type = 'rotace';
     else type = 'cirace';
+    console.log(type);
     const onTypeChange = ({target: { value }}) => {
       switch (value) {
         case 'rot': {
@@ -130,12 +131,12 @@ function Float(props) {
           break;
         }
         case 'rotace': {
-          store.onChangeMotionValue(index, i, 'ace', ace || [0, 0, 0]);
+          store.onChangeMotionValue(index, i, 'ace', typeof ace === 'number' ? ace : 0);
           store.onChangeMotionValue(index, i, 'ref', null);
           break;
         }
         case 'cirace': {
-          store.onChangeMotionValue(index, i, 'ace', ace || [0, 0, 0]);
+          store.onChangeMotionValue(index, i, 'ace', typeof ace === 'number' ? ace : 0);
           store.onChangeMotionValue(index, i, 'ref', ref || [0, 0, 0]);
           break;
         }
@@ -173,9 +174,9 @@ function Float(props) {
         key="2"
       >
         <span className="args-item-name">速度: </span>
-        <Point
-          point={toJS(vel)}
-          onChange={store.onChangeMotionVel.bind(store, index, i)}
+        <InputNumber
+          value={vel}
+          onChange={store.onChangeMotionValue.bind(store, index, i, 'vel')}
         />
       </div>,
       <div
@@ -184,20 +185,34 @@ function Float(props) {
         key="3"
       >
         <span className="args-item-name">加速度: </span>
-        <Point
-          point={toJS(ace)}
-          onChange={store.onChangeMotionAce.bind(store, index, i)}
+        <InputNumber
+          value={toJS(ace)}
+          onChange={store.onChangeMotionValue.bind(store, index, i, 'ace')}
         />
       </div>,
       <div
         if={type === 'cirace'}
         className="mainlist-arg-item"
-        key="4"
+        key="5"
       >
         <span className="args-item-name">环绕点: </span>
         <Point
           point={toJS(ref)}
           onChange={store.onChangeMotionRef.bind(store, index, i)}
+        />
+      </div>,
+      <div
+        className="mainlist-arg-item"
+        key="4"
+      >
+        <span className="args-item-name">环绕轴: </span>
+        <Point
+          point={toJS(axisp1)}
+          onChange={store.onChangeMotionAxisp1.bind(store, index, i)}
+        />
+        <Point
+          point={toJS(axisp2)}
+          onChange={store.onChangeMotionAxisp2.bind(store, index, i)}
         />
       </div>
     ];
@@ -217,7 +232,7 @@ function Float(props) {
         case 'rect': {
           store.onChangeMotionValue(index, i, 'freq', [0, 0, 0]);
           store.onChangeMotionValue(index, i, 'ampl', [0, 0, 0]);
-          store.onChangeMotionValue(index, i, 'phase', [0, 0, 0]);
+          store.onChangeMotionValue(index, i, 'phase', typeof phase === 'object' ? phase : [0, 0, 0]);
           store.onChangeMotionValue(index, i, 'axisp1', null);
           store.onChangeMotionValue(index, i, 'axisp2', null);
           store.onChangeMotionValue(index, i, 'ref', null);
@@ -226,7 +241,7 @@ function Float(props) {
         case 'rot': {
           store.onChangeMotionValue(index, i, 'freq', typeof freq === 'object' ? 0 : freq);
           store.onChangeMotionValue(index, i, 'ampl', typeof ampl === 'object' ? 0 : ampl);
-          store.onChangeMotionValue(index, i, 'phase', null);
+          store.onChangeMotionValue(index, i, 'phase', typeof phase === 'object' ? 0 : phase);
           store.onChangeMotionValue(index, i, 'axisp1', axisp1 || [0, 0, 0]);
           store.onChangeMotionValue(index, i, 'axisp2', axisp2 || [0, 0, 0]);
           store.onChangeMotionValue(index, i, 'ref', null);
@@ -235,7 +250,7 @@ function Float(props) {
         case 'cir': {
           store.onChangeMotionValue(index, i, 'freq', typeof freq === 'object' ? 0 : freq);
           store.onChangeMotionValue(index, i, 'ampl', typeof ampl === 'object' ? 0 : ampl);
-          store.onChangeMotionValue(index, i, 'phase', 0);
+          store.onChangeMotionValue(index, i, 'phase', typeof phase === 'object' ? 0 : phase);
           store.onChangeMotionValue(index, i, 'axisp1', axisp1 || [0, 0, 0]);
           store.onChangeMotionValue(index, i, 'axisp2', axisp2 || [0, 0, 0]);
           store.onChangeMotionValue(index, i, 'ref', [0, 0, 0]);

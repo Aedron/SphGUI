@@ -538,8 +538,8 @@ class Store {
     m.type = value;
     switch (value) {
       case 'linear': {
-        m.vel = motion.vel || [0, 0, 0];
-        m.ace = motion.ace || [0, 0, 0];
+        m.vel = [0, 0, 0];
+        m.ace = [0, 0, 0];
         m.axisp1 = null;
         m.axisp2 = null;
         m.freq = null;
@@ -549,8 +549,8 @@ class Store {
         break;
       }
       case 'rotate': {
-        m.vel = motion.vel || [0, 0, 0];
-        m.ace = motion.ace || [0, 0, 0];
+        m.vel = 0;
+        m.ace = null;
         m.axisp1 = motion.axisp1 || [0, 0, 0];
         m.axisp2 = motion.axisp2 || [0, 0, 0];
         m.freq = null;
@@ -560,8 +560,8 @@ class Store {
         break;
       }
       case 'sin': {
-        m.vel = motion.vel || [0, 0, 0];
-        m.ace = motion.ace || [0, 0, 0];
+        m.vel = null;
+        m.ace = null;
         m.axisp1 = null;
         m.axisp2 = null;
         m.freq = [0, 0, 0];

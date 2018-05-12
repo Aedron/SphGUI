@@ -123,23 +123,98 @@ function genMotion(mainlist) {
 function genMotionItem(rawMotions, index) {
   if (!rawMotions) return '';
   const motions = genTimeLine(rawMotions).map((m, i) => {
+    const isLast = i === rawMotions.length - 1;
     switch (m.type) {
-      case 'linear': return genLinearMotion(m);
-      case 'rotate': return genRotateMotion(m);
-      case 'sin': return genSinMotion(m);
+      case 'linear': return genLinearMotion(m, i+1, isLast);
+      case 'rotate': return genRotateMotion(m, i+1, isLast);
+      case 'sin': return genSinMotion(m, i+1, isLast);
+      case 'pause': return genPauseMotion(m, i+1, isLast);
       default: return '';
     }
   }).join('\n');
-  return `<objreal ref="${index}">${motions}</objreal>`
+  return `<objreal ref="${index}"><begin mov="1" start="0" />${motions}</objreal>`
 }
-function genLinearMotion(motion) {
-  return '';
+function genLinearMotion(motion, id, isLast) {
+  const { vel, ace, duration } = motion;
+  const props = `id="${id}" duration="${duration}"${isLast ? '' : ` next="${id+1}"`}`;
+  if (!ace) {
+    return `<mvrect ${props}><vel ${genKVS(vel)}/></mvrect>`;
+  }
+  return `<mvrectace ${props}><vel ${genKVS(vel)}/><ace ${genKVS(ace)}/></mvrectace>`;
 }
-function genRotateMotion(motion) {
-  return '';
+function genRotateMotion(motion, id, isLast) {
+  const { vel, ace, ref, axisp1, axisp2, duration } = motion;
+  const props = `id="${id}" duration="${duration}"${isLast ? '' : ` next="${id+1}"`}`;
+  if (!ace && ace !== 0) {
+    return [
+      `<mvrot ${props}>`,
+      `<vel ang="${vel}" />`,
+      `<axisp1 ${genKVS(axisp1)}/>`,
+      `<axisp2 ${genKVS(axisp2)}/>`,
+      `</mvrot>`
+    ].join('\n');
+  } else if (!ref) {
+    return [
+      `<mvrotace ${props}>`,
+      `<ace ang="${ace}" />`,
+      `<velini ang="${vel}" />`,
+      `<axisp1 ${genKVS(axisp1)}/>`,
+      `<axisp2 ${genKVS(axisp2)}/>`,
+      `</mvrotace>`
+    ].join('\n');
+  } else {
+    return [
+      `<mvcirace ${props}>`,
+      `<ace ang="${ace}" />`,
+      `<velini ang="${vel}" />`,
+      `<ref ${genKVS(ref)}/>`,
+      `<axisp1 ${genKVS(axisp1)}/>`,
+      `<axisp2 ${genKVS(axisp2)}/>`,
+      `</mvcirace>`
+    ].join('\n');
+  }
 }
-function genSinMotion(motion) {
-  return '';
+function genSinMotion(motion, id, isLast) {
+  const {
+    duration, ref, axisp1,
+    axisp2, freq, ampl, phase
+  }  = motion;
+  const props = `id="${id}" duration="${duration}"${isLast ? '' : ` next="${id+1}"`}`;
+  if (!axisp1) {
+    return [
+      `<mvrectsinu ${props}>`,
+      `<freq ${genKVS(freq)}/>`,
+      `<ampl ${genKVS(ampl)}/>`,
+      `<phase ${genKVS(phase)}/>`,
+      `</mvrectsinu>`
+    ].join('\n');
+  } else if (!ref) {
+    return [
+      `<mvrotsinu ${props}>`,
+      `<axisp1 ${genKVS(axisp1)}/>`,
+      `<axisp2 ${genKVS(axisp2)}/>`,
+      `<freq v="${freq}" />`,
+      `<ampl v="${ampl}" />`,
+      `<phase v="${phase}" />`,
+      `</mvrotsinu>`
+    ].join('\n');
+  } else {
+    return [
+      `<mvcirsinu ${props}>`,
+      `<ref ${genKVS(ref)}/>`,
+      `<axisp1 ${genKVS(axisp1)}/>`,
+      `<axisp2 ${genKVS(axisp2)}/>`,
+      `<freq v="${freq}" />`,
+      `<ampl v="${ampl}" />`,
+      `<phase v="${phase}" />`,
+      `</mvcirsinu>`
+    ].join('\n');
+  }
+}
+function genPauseMotion(motion, id, isLast) {
+  const { duration } = motion;
+  const props = `id="${id}" duration="${duration}"${isLast ? '' : ` next="${id+1}"`}`;
+  return `<wait ${props} />`;
 }
 
 
