@@ -2,7 +2,7 @@
 import {
   genParams, genDefinition, genMkConfig,
   genConstants, genMainList, genInitials,
-  genFloatings, genMotion
+  genFloatings, genMotion, genWave
 } from './gen';
 
 
@@ -25,6 +25,7 @@ function genXML(store) {
   const initials = genInitials(mainList);
   const floatings = genFloatings(mainList);
   const motion = genMotion(mainList);
+  const wave = genWave(store.waves);
 
   const xml = `
   <case>
@@ -38,7 +39,13 @@ function genXML(store) {
         <floatings>${floatings}</floatings>
         <motion>${motion}</motion>        
     </casedef>
-    <execution>${params}</execution></case>`;
+    <execution>
+        <special>
+            <wavepaddles>${wave}</wavepaddles>
+        </special>
+        ${params}
+    </execution>
+  </case>`;
   return '<?xml version="1.0" encoding="UTF-8" ?>\n' + formatXML(xml);
 }
 

@@ -9,6 +9,7 @@ const { fillTypeMap } = data;
 /*
 *** XML Generator
  */
+// Params
 function genParams(params) {
   const p = params.map(p => {
     const { name, value, disable, unit } = p;
@@ -17,7 +18,7 @@ function genParams(params) {
   }).join('\n');
   return `<parameters>${p}</parameters>`
 }
-
+// Container
 function genDefinition(definition) {
   const {dp, min, max} = definition;
   return [
@@ -27,12 +28,12 @@ function genDefinition(definition) {
     `</definition>`
   ].join('\n')
 }
-
+// Bundle
 function genMkConfig(mkConfig) {
   const {boundCount, fluidCount} = mkConfig;
   return `<mkconfig boundcount="${boundCount}" fluidcount="${fluidCount}" />\n`
 }
-
+// Constants
 function genConstants(constants) {
   const v = constants.map((i) => {
     let {name, value, displayName, unit} = i;
@@ -44,7 +45,7 @@ function genConstants(constants) {
   }).join('\n');
   return `<constantsdef>\n${v}\n</constantsdef>`
 }
-
+// MainList
 function genMainList(mainlist) {
   const m = mainlist.map((m, index) => {
     const { type } = m;
@@ -70,7 +71,7 @@ function genMainList(mainlist) {
   }).join('\n');
   return `<mainlist>${m}</mainlist>`
 }
-
+// Initials
 function genInitials(mainlist) {
   return mainlist.map((item, index) => {
     const { isFluid, initial: { velocity, wave } } = item;
@@ -87,7 +88,7 @@ function genInitials(mainlist) {
     return initial.join('\n');
   }).filter(i => i.length).join('\n');
 }
-
+// Floatings
 function genFloatings(mainlist) {
   return mainlist.map((item, index) => {
     const { isFluid, float } = item;
@@ -112,7 +113,7 @@ function genFloatings(mainlist) {
     return floatings.join('\n');
   }).filter(i => i.length).join('\n');
 }
-
+// Motion
 function genMotion(mainlist) {
   return mainlist
     .map(i => i.motion)
@@ -215,6 +216,10 @@ function genPauseMotion(motion, id, isLast) {
   const { duration } = motion;
   const props = `id="${id}" duration="${duration}"${isLast ? '' : ` next="${id+1}"`}`;
   return `<wait ${props} />`;
+}
+// Wave
+function genWave(waves) {
+
 }
 
 
@@ -401,5 +406,6 @@ export {
   genMainList,
   genInitials,
   genFloatings,
-  genMotion
+  genMotion,
+  genWave
 };
