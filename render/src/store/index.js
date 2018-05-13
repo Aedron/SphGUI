@@ -41,7 +41,6 @@ class Store {
   };
   // 环境常量
   @observable constants = loadTemplate('constants');
-
   /*
   *** Args
    */
@@ -55,6 +54,14 @@ class Store {
   };
   // 执行参数
   @observable params = loadTemplate('params');
+  @action onCheckParams = (i, checked) => {
+    const { params } = this;
+    params[i].disable = !checked;
+  };
+  @action onChangeParams = (i, e) => {
+    const { params } = this;
+    params[i].value = typeof e === 'object' ? e.target.value : e;
+  };
   // Bundle 配置
   @observable mkConfig = {
     boundCount: 240,

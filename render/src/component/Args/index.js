@@ -86,7 +86,7 @@ class Args extends Component {
   };
   genOnParamsCheck = (i) => {
     return (checked) => {
-      const { params } = this.state;
+      const { params } = this;
       params[i].disable = !checked;
       return this.setState({ params })
     };
@@ -114,9 +114,10 @@ class Args extends Component {
     return <Component key={index} index={index} />
   };
   renderParams = (p, i) => {
+    const { props: { store } } = this;
     const { name, displayName, value, disable, unit, options } = p;
-    const onChange = this.genOnParamsChange(i);
-    const onChecked = this.genOnParamsCheck(i);
+    const onChange = store.onChangeParams.bind(store, i);
+    const onChecked = store.onCheckParams.bind(store, i);
     const Component = typeof value === 'number' ? InputNumber : Input;
     const inputStyle = {
       width: '180px'
