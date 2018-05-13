@@ -13,6 +13,13 @@ const {
   fillModeMap, defaultFloatAttrMap
 } = data;
 
+const { remote } = window.require('electron');
+const { dialog } = remote.require('electron');
+const remoteRequire = remote.require;
+const fs = remoteRequire('fs');
+const path = remoteRequire('path');
+
+
 
 class Store {
   /*
@@ -754,9 +761,43 @@ class Store {
   /*
   *** GenXML
    */
-  genXML = () => {
-    const xml = genXML(this);
-    console.log(xml);
+  @observable savePath = null;
+  @action selectSavePath = (callback) => {
+    const path = dialog.showSaveDialog();
+    if (!path) return;
+    this.savePath = path;
+    callback && callback();
+  };
+  @action genXML = () => {
+    const { savePath } = this;
+    const save = () => {
+      const xml = genXML(this);
+      fs.writeFileSync(filename, xml, 'utf-8');
+    };
+
+    if (!savePath) {
+      return this.selectSavePath(this.genXML);
+    }
+    if (!fs.existsSync(savePath)) {
+      fs.mkdirSync(savePath);
+    }
+
+    const filename = path.join(savePath, './Case_Def.xml');
+    if (fs.existsSync(filename)) {
+      return dialog.showMessageBox({
+        type: 'question',
+        title: '覆盖Case文件',
+        message: `${filename}已存在, 是否覆盖?`,
+        buttons: ['覆盖', '取消'],
+        defaultId: 0
+      }, (selected) => {
+        if (selected === 0) {
+          fs.unlinkSync(filename);
+          save();
+        }
+      });
+    }
+    save();
   };
 }
 

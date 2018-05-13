@@ -26,7 +26,6 @@ import "./index.scss";
 import Point from "./Point";
 
 
-const { remote } = window.require('electron');
 const { typesMap } = data;
 const { Panel } = Collapse;
 const { Group: ButtonGroup } = Button;
@@ -43,10 +42,9 @@ class Args extends Component {
   };
   componentDidMount = () => {
     this.onAdd('box');
-    this.props.store.genXML();
   };
   onOk = () => {
-    // this.props.store.toggleView('model');
+    this.props.store.toggleView('model');
     this.props.store.genXML();
   };
   // mainlist

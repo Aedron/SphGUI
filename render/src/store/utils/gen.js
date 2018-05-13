@@ -105,7 +105,7 @@ function genMainList(mainlist) {
         break;
     }
     const command = genCommand(m, index);
-    return `<!--Draw ${type}--/>\n${common}\n${transform}\n${command}`
+    return `<!-- Draw ${type} -->\n${common}\n${transform}\n${command}`
   }).join('\n');
   return `<mainlist>${m}</mainlist>`
 }
