@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {observer} from 'mobx-react';
 import { data } from '../../../utils';
-import { Radio, Button, Popconfirm } from 'antd';
+import { Radio, Button, Popconfirm, Checkbox } from 'antd';
 
 import Header from './Header.js';
 import Type from './Type';
@@ -42,81 +42,82 @@ function Common(props) {
       <div className="mainlist-header">
         <span>通用参数</span>
         <div>
-          <ButtonGroup>
-            <Popconfirm
-              if={move}
-              title="确定删除移动属性?"
-              onConfirm={store.onToggleTransformMove.bind(store, index)}
-              okText="确认"
-              cancelText="取消"
-            >
-              <Button type="primary" icon="swap">移动</Button>
-            </Popconfirm>
-            <Button
-              else
-              icon="swap"
-              onClick={store.onToggleTransformMove.bind(store, index)}
-            >移动</Button>
-            <Popconfirm
-              if={scale}
-              title="确定删除缩放属性?"
-              onConfirm={store.onToggleTransformScale.bind(store, index)}
-              okText="确认"
-              cancelText="取消"
-            >
-              <Button type="primary" icon="arrows-alt">缩放</Button>
-            </Popconfirm>
-            <Button
-              else
-              icon="arrows-alt"
-              onClick={store.onToggleTransformScale.bind(store, index)}
-            >缩放</Button>
-            <Popconfirm
-              if={rotate}
-              title="确定删除旋转属性?"
-              onConfirm={store.onToggleTransformRotate.bind(store, index)}
-              okText="确认"
-              cancelText="取消"
-            >
-              <Button type="primary" icon="retweet">旋转</Button>
-            </Popconfirm>
-            <Button
-              else
-              icon="retweet"
-              onClick={store.onToggleTransformRotate.bind(store, index)}
-            >旋转</Button>
-          </ButtonGroup>
-          <ButtonGroup>
-            <Popconfirm
-              if={velocity}
-              title="确定删除初始速度属性?"
-              onConfirm={store.onToggleInitVelocity.bind(store, index)}
-              okText="确认"
-              cancelText="取消"
-            >
-              <Button type="primary" icon="right">初始速度</Button>
-            </Popconfirm>
-            <Button
-              else
-              icon="right"
-              onClick={store.onToggleInitVelocity.bind(store, index)}
-            >初始速度</Button>
+          {/*移动*/}
+          <Popconfirm
+            if={move}
+            title="确定删除移动属性?"
+            onConfirm={store.onToggleTransformMove.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Checkbox checked={true}>移动</Checkbox>
+          </Popconfirm>
+          <Checkbox
+            else
+            onChange={store.onToggleTransformMove.bind(store, index)}
+            checked={false}
+          >移动</Checkbox>
+          {/*缩放*/}
+          <Popconfirm
+            if={scale}
+            title="确定删除移动属性?"
+            onConfirm={store.onToggleTransformScale.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Checkbox checked={true}>缩放</Checkbox>
+          </Popconfirm>
+          <Checkbox
+            else
+            onChange={store.onToggleTransformScale.bind(store, index)}
+            checked={false}
+          >缩放</Checkbox>
+          {/*旋转*/}
+          <Popconfirm
+            if={rotate}
+            title="确定删除旋转属性?"
+            onConfirm={store.onToggleTransformRotate.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Checkbox checked={true}>旋转</Checkbox>
+          </Popconfirm>
+          <Checkbox
+            else
+            checked={false}
+            onChange={store.onToggleTransformRotate.bind(store, index)}
+          >旋转</Checkbox>
 
-            <Popconfirm
-              if={wave}
-              title="确定删除初始孤立波属性?"
-              onConfirm={store.onToggleInitWave.bind(store, index)}
-              okText="确认"
-              cancelText="取消"
-            >
-              <Button type="primary" icon="double-right">初始波浪</Button>
-            </Popconfirm>
-            <Button
-              else
-              icon="double-right"
-              onClick={store.onToggleInitWave.bind(store, index)}
-            >初始波浪</Button>
-          </ButtonGroup>
+          {/*初始速度*/}
+          <Popconfirm
+            if={velocity}
+            title="确定删除初始速度属性?"
+            onConfirm={store.onToggleInitVelocity.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Checkbox checked={true}>初始速度</Checkbox>
+          </Popconfirm>
+          <Checkbox
+            else
+            checked={false}
+            onClick={store.onToggleInitVelocity.bind(store, index)}
+          >初始速度</Checkbox>
+          {/*初始波浪*/}
+          <Popconfirm
+            if={wave}
+            title="确定删除初始孤立波属性?"
+            onConfirm={store.onToggleInitWave.bind(store, index)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Checkbox checked={true}>初始波浪</Checkbox>
+          </Popconfirm>
+          <Checkbox
+            else
+            checked={false}
+            onChange={store.onToggleInitWave.bind(store, index)}
+          >初始波浪</Checkbox>
         </div>
       </div>
       <div className="mainlist-args">

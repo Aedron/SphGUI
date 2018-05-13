@@ -43,7 +43,7 @@ function Wave(props) {
 
   function renderWave(wave, isRegular) {
     const {
-      duration, depth,
+      start, duration, depth,
       fixedDepth, direction, height,
       period, phase, ramp, spectrum,
       discretization, peakCoef, waves,
@@ -51,6 +51,14 @@ function Wave(props) {
     } = wave;
     return (
       <div className="wave-args">
+        <div className="wave-arg-item">
+          <span className="args-item-name">开始时间: </span>
+          <InputNumber
+            value={start}
+            onChange={store.onChangeWaveValue.bind(store, index, isRegular, 'start')}
+            min={0}
+          />
+        </div>
         <div className="wave-arg-item">
           <span className="args-item-name">持续时间: </span>
           <InputNumber
@@ -98,7 +106,7 @@ function Wave(props) {
             min={0}
           />
         </div>
-        <div className="wave-arg-item">
+        <div className="wave-arg-item" if={isRegular}>
           <span className="args-item-name">phase: </span>
           <InputNumber
             value={phase}
@@ -106,7 +114,7 @@ function Wave(props) {
             min={0}
           />
         </div>
-        <div className="wave-arg-item">
+        <div className="wave-arg-item" if={isRegular}>
           <span className="args-item-name">ramp: </span>
           <InputNumber
             value={ramp}

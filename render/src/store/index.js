@@ -693,6 +693,7 @@ class Store {
     const { wave } = this.mainList[index];
     if (isRegular) {
       wave.regular = {
+        start: 0,
         duration: 1,
         depth: 0,
         fixedDepth: 0,
@@ -712,14 +713,15 @@ class Store {
       };
     } else {
       wave.irregular = {
+        start: 0,
         duration: 1,
         depth: 0,
         fixedDepth: 0,
         direction: [1, 0, 0],
         height: 0.1,
         period: 0.1,
-        phase: 0,
-        ramp: 0,
+        phase: null,
+        ramp: null,
         // irregular
         spectrum: {
           value: 'Jonswap',

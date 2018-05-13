@@ -25,7 +25,7 @@ function genXML(store) {
   const initials = genInitials(mainList);
   const floatings = genFloatings(mainList);
   const motion = genMotion(mainList);
-  const wave = genWave(store.waves);
+  const wave = genWave(mainList);
 
   const xml = `
   <case>
