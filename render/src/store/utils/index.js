@@ -81,7 +81,7 @@ function formatXML(input, indent) {
     }
   }
 
-  return xmlArr.join('\n');  //rejoin t
+  return xmlArr.join('\n');
 }
 
 

@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Button } from 'antd';
+import { Button, Icon, Checkbox, Timeline } from 'antd';
 
 import { withStore } from '../../store';
 
@@ -28,9 +28,9 @@ import RSMActive from '../../static/pics/rsm1.svg';
 class Model extends Component {
   fileTypes = [
     ['xml', XML, XMLActive],
-    ['out', OUT, OUTActive],
-    ['vtk', VTK, VTKActive],
     ['bi4', BI4, BI4Active],
+    ['vtk', VTK, VTKActive],
+    ['out', OUT, OUTActive],
     ['csv', CSV, CSVActive],
     ['rsm', RSM, RSMActive]
   ];
@@ -39,13 +39,19 @@ class Model extends Component {
 
     return (
       <div className={`model ${store.view === 'model' ? 'active' : ''}`}>
-        <div className="model-args">
-          <p className="title">参数</p>
-          <Button icon="folder-open">载入XML</Button>
-          <Button
-            icon="form"
-            onClick={store.toggleView.bind(store, 'args')}
-          >编辑参数</Button>
+        <div className="model-options">
+          <div onClick={store.toggleView.bind(store, 'args')}>
+            <Icon type="edit" />
+            <span>编辑参数</span>
+          </div>
+          <div>
+            <Icon type="folder-open" />
+            <span>载入XML</span>
+          </div>
+          <div>
+            <Icon type="question-circle-o" />
+            <span>帮助</span>
+          </div>
         </div>
         <div className="model-trans">
           <p className="title">目标格式</p>
@@ -56,11 +62,44 @@ class Model extends Component {
               key={f[0]}
             >
               <img src={f[store.selectedFileTypes.includes(f[0]) ? 2 : 1]}/>
+              <Checkbox
+                onChange={store.selectFileType.bind(store, f[0])}
+                checked={store.selectedFileTypes.includes(f[0])}
+              >{f[0].toUpperCase()}</Checkbox>
             </div>
           </div>
         </div>
         <div className="model-process">
           <p className="title">模型生成</p>
+          <Button
+            if={!store.execing}
+            disabled={!store.filePath} onClick={store.exec}
+            icon="caret-right"
+            shape="circle"
+          />
+          <Button
+            else
+            icon="close"
+            type="danger"
+            shape="circle"
+          />
+
+          <p if={store.filePath}>算例路径: {store.filePath}</p>
+          <span else>算例未加载</span>
+          <Timeline
+            if={store.step}
+            pending={store.step[0] ?
+              store.step[0].split('\n')
+                .map((item, key) => <div key={key}>{item}</div>) :
+              null
+            }
+          >
+            <Timeline.Item
+              for={(t, index) in store.step[1]}
+              color="green"
+              key={index}
+            >{t}</Timeline.Item>
+          </Timeline>
         </div>
       </div>
     );

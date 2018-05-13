@@ -25,7 +25,7 @@ class Store {
   /*
   *** view
    */
-  @observable viewIndex = 1;
+  @observable viewIndex = 0;
   @action toggleView = (view) => {
     if (typeof view === 'number') this.viewIndex = view;
     else {
@@ -40,7 +40,7 @@ class Store {
   /*
   *** FileType
    */
-  @observable selectedFileTypes = ['xml', 'out', 'vtk'];
+  @observable selectedFileTypes = ['xml', 'bi4', 'vtk'];
   @action selectFileType = (type) => {
     const index = this.selectedFileTypes.indexOf(type);
     if (index >= 0) this.selectedFileTypes.splice(index, 1);
@@ -762,6 +762,7 @@ class Store {
   *** GenXML
    */
   @observable savePath = null;
+  @observable filePath = null;
   @action selectSavePath = (callback) => {
     const path = dialog.showSaveDialog();
     if (!path) return;
@@ -772,7 +773,9 @@ class Store {
     const { savePath } = this;
     const save = () => {
       const xml = genXML(this);
+      console.log(xml);
       fs.writeFileSync(filename, xml, 'utf-8');
+      this.filePath = filename;
     };
 
     if (!savePath) {
@@ -799,6 +802,26 @@ class Store {
     }
     save();
   };
+  /*
+  *** Exec
+   */
+  @observable execing = false;
+  @observable stepIndex = 5;
+  @computed get step() {
+    const { fileProcess: [done, total], stepIndex } = this;
+    return [
+      ['生成算例', []],
+      ['预处理', ['生成算例']],
+      [`计算粒子数据\n已完成: ${done}\n一共: ${total}`, ['生成算例', '预处理']],
+      ['格式转换', ['生成算例', '预处理', '计算粒子数据']],
+      ['保存文件', ['生成算例', '预处理', '计算粒子数据', '格式转换']],
+      [null, ['生成算例', '预处理', '计算粒子数据', '格式转换', '完成']]
+    ][stepIndex];
+  }
+  @observable fileProcess = [666, 999];
+  @observable exec = () => {
+
+  }
 }
 
 
