@@ -56,23 +56,32 @@ class Box extends Component {
           index={index}
           name="Box (立方体)"
         />
-        <div className="mainlist-arg-item">
-          <span className="args-item-name">BoxFill</span>
-          <Checkbox
-            for={c in boxFills}
-            onChange={store.onChangeBoxFill.bind(store, index, c)}
-            checked={data.boxFill.includes(c)}
-            disabled={data.boxFill.includes(boxFillMap.ALL) && ![boxFillMap.ALL, boxFillMap.SOLID].includes(c)}
-            key={c}
-          >{c}</Checkbox>
-        </div>
-        <div className="mainlist-arg-item">
-          <span className="args-item-name">顶点: </span>
-          <Point point={toJS(data.points[0])} onChange={store.onChangePoint.bind(store, index, 0)} />
-        </div>
-        <div className="mainlist-arg-item">
-          <span className="args-item-name">棱长: </span>
-          <Point point={toJS(data.points[1])} onChange={store.onChangePoint.bind(store, index, 1)} />
+        <div className="line-points mainlist-item">
+          <div className="mainlist-header">
+            <span>特征参数</span>
+            <div>
+            </div>
+          </div>
+          <div className="mainlist-args">
+            <div className="mainlist-arg-item">
+              <span className="args-item-name">BoxFill</span>
+              <Checkbox
+                for={c in boxFills}
+                onChange={store.onChangeBoxFill.bind(store, index, c)}
+                checked={data.boxFill.includes(c)}
+                disabled={data.boxFill.includes(boxFillMap.ALL) && ![boxFillMap.ALL, boxFillMap.SOLID].includes(c)}
+                key={c}
+              >{c}</Checkbox>
+            </div>
+            <div className="mainlist-arg-item">
+              <span className="args-item-name">顶点: </span>
+              <Point point={toJS(data.points[0])} onChange={store.onChangePoint.bind(store, index, 0)} />
+            </div>
+            <div className="mainlist-arg-item">
+              <span className="args-item-name">棱长: </span>
+              <Point point={toJS(data.points[1])} onChange={store.onChangePoint.bind(store, index, 1)} />
+            </div>
+          </div>
         </div>
       </div>
     );

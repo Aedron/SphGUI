@@ -20,7 +20,7 @@ function Header(props) {
   return (
     <div className="mainlist-header">
       <span>{name}</span>
-      <div>
+      <div className="ant-checkbox-group">
         {/*漂浮*/}
         <Popconfirm
           if={float}
@@ -51,7 +51,7 @@ function Header(props) {
           checked={false}
           onChange={store.onToggleMotion.bind(store, index)}
         >运动</Checkbox>
-        
+
         {/*规则波*/}
         <Popconfirm
           if={regular}

@@ -47,7 +47,7 @@ class Store {
   @action onChangeCon = (i, j, e) => {
     const value = typeof e === 'object' ? e.target.value : e;
     if (j || j === 0) {
-      this.constants[i].value[j][1] = value || 0;
+      this.constants[i].value[j] = value || 0;
     } else {
       this.constants[i].value = value || 0;
     }
@@ -82,7 +82,7 @@ class Store {
   @observable onChangeContainerDp = (value) => {
     this.container.dp = value || 0;
   };
-  @observable onChangeContainer = (i, isMax, value) => {
+  @observable onChangeContainer = (isMax, i, value) => {
     const { container } = this;
     let { min, max } = container;
     (isMax ? max : min)[i] = value || 0;

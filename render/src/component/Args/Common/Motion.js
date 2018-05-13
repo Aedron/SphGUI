@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { toJS } from 'mobx';
 import {observer} from 'mobx-react';
-import {Button, Radio, Timeline, InputNumber} from 'antd';
+import {Button, Radio, Timeline, InputNumber, Popconfirm} from 'antd';
 
 import { genTimeLine } from '../../../utils';
 import Point from '../Point';
@@ -53,6 +53,17 @@ function Float(props) {
               <RadioButton value="sin">正弦</RadioButton>
               <RadioButton value="pause">静止</RadioButton>
             </RadioGroup>
+            <Popconfirm
+              title={`确定删除${start}~${start + duration}S的运动属性?`}
+              onConfirm={store.onDeleteMotion.bind(store, index, i)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <Button
+                type="danger"
+                icon="delete"
+              >删除</Button>
+            </Popconfirm>
           </div>
         </div>
         <div className="mainlist-args">
@@ -122,7 +133,6 @@ function Float(props) {
     if (!ace && ace !== 0) type = 'rot';
     else if (!ref) type = 'rotace';
     else type = 'cirace';
-    console.log(type);
     const onTypeChange = ({target: { value }}) => {
       switch (value) {
         case 'rot': {

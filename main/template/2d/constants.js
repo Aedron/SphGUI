@@ -2,12 +2,13 @@
 module.exports = [
   {
     name: 'lattice',
-    value: [['bound', 1], ['fluid', 1]]
+    value: [1, 1],
+    options: ['bound', 'fluid']
   },
   {
     name: 'gravity',
     displayName: '重力加速度',
-    value: [['x', 0], ['y', 0], ['z', 0]],
+    value: [0, 0, 0],
     unit: 'm/s^2'
   },
   {

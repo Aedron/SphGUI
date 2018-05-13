@@ -41,7 +41,7 @@ function Common(props) {
     <div key="1" className="line-points mainlist-item">
       <div className="mainlist-header">
         <span>通用参数</span>
-        <div>
+        <div className="ant-checkbox-group">
           {/*移动*/}
           <Popconfirm
             if={move}

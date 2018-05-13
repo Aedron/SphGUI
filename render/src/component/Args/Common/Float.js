@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { toJS } from 'mobx';
 import {observer} from 'mobx-react';
-import {Button, Radio, Popconfirm, InputNumber} from 'antd';
+import {Button, Radio, Popconfirm, InputNumber, Checkbox} from 'antd';
 
 import Point from '../Point';
 
@@ -47,13 +47,14 @@ function Float(props) {
                 okText="确认"
                 cancelText="取消"
               >
-                <Button type="primary">{text}</Button>
+                <Checkbox checked={true}>{text}</Checkbox>
               </Popconfirm>,
-              <Button
+              <Checkbox
                 if={!(f || f === 0)}
                 key={`${i}-1`}
-                onClick={store.onToggleFloatAttr.bind(store, index, subText || text)}
-              >{text}</Button>
+                checked={false}
+                onChange={store.onToggleFloatAttr.bind(store, index, subText || text)}
+              >{text}</Checkbox>
             ])}
           </ButtonGroup>
         </div>

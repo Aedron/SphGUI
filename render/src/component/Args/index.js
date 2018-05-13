@@ -23,6 +23,7 @@ import { data } from '../../utils';
 import { withStore } from '../../store';
 
 import "./index.scss";
+import Point from "./Point";
 
 
 const { remote } = window.require('electron');
@@ -162,7 +163,7 @@ class Args extends Component {
       <div className={`args ${store.view === 'args' ? 'active' : ''}`}>
         <Collapse
           bordered={false}
-          defaultActiveKey={['defintion', 'mainlist', 'wave',]}
+          defaultActiveKey={['constants']}
         >
           {/*container*/}
           <Panel
@@ -180,53 +181,19 @@ class Args extends Component {
             <div className="defintion-item args-item">
               <span className="args-item-name">min:</span>
               <div className="args-item-values">
-                <div>
-                  <span>X</span>
-                  <InputNumber
-                    value={store.container.min[0]}
-                    onChange={store.onChangeContainer.bind(store, 0)}
-                  />
-                </div>
-                <div>
-                  <span>Y</span>
-                  <InputNumber
-                    value={store.container.min[1]}
-                    onChange={store.onChangeContainer.bind(store, 1, false)}
-                  />
-                </div>
-                <div>
-                  <span>Z</span>
-                  <InputNumber
-                    value={store.container.min[2]}
-                    onChange={store.onChangeContainer.bind(store, 2, false)}
-                  />
-                </div>
+                <Point
+                  point={toJS(store.container.min)}
+                  onChange={store.onChangeContainer.bind(store, false)}
+                />
               </div>
             </div>
             <div className="defintion-item args-item">
               <span className="args-item-name">max:</span>
               <div className="args-item-values">
-                <div>
-                  <span>X</span>
-                  <InputNumber
-                    value={store.container.max[0]}
-                    onChange={store.onChangeContainer.bind(store, 0, true)}
-                  />
-                </div>
-                <div>
-                  <span>Y</span>
-                  <InputNumber
-                    value={store.container.max[1]}
-                    onChange={store.onChangeContainer.bind(store, 1, true)}
-                  />
-                </div>
-                <div>
-                  <span>Z</span>
-                  <InputNumber
-                    value={store.container.max[2]}
-                    onChange={store.onChangeContainer.bind(store, 2, true)}
-                  />
-                </div>
+                <Point
+                  point={toJS(store.container.max)}
+                  onChange={store.onChangeContainer.bind(store, true)}
+                />
               </div>
             </div>
           </Panel>
@@ -276,15 +243,21 @@ class Args extends Component {
                 className="args-item-values"
               >
                 <div
-                  for={(subArg, j) in arg.value}
-                  key={subArg[0]}
+                  if={arg.options}
+                  for={(v, j) in arg.value}
+                  key={arg.options[j]}
                 >
-                  <span>{subArg[0]}</span>
+                  <span>{arg.options[j]}</span>
                   <InputNumber
-                    value={subArg[1]}
+                    value={v}
                     onChange={store.onChangeCon.bind(store, i, j)}
                   />
                 </div>
+                <Point
+                  else
+                  point={toJS(arg.value)}
+                  onChange={store.onChangeCon.bind(store, i)}
+                />
               </div>
               <InputNumber
                 else

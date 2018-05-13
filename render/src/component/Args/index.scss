@@ -3,6 +3,24 @@
   .ant-radio-group {
     margin: 10px 0 20px 0;
   }
+  .args-item, .ant-radio-group, .ant-checkbox-group,
+  .ant-checkbox-wrapper, .ant-checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
+  .ant-checkbox-group {
+    position: relative;
+    top: 3px;
+  }
+  .ant-checkbox-wrapper > span {
+    position: relative;
+    top: -2px;
+    line-height: 16px;
+  }
+  .ant-checkbox {
+    position: relative;
+    //top: 1px;
+  }
   .ant-collapse-content-box {
     text-align: left;
     padding: 12px 16px !important;
@@ -38,10 +56,9 @@
   }
 
   .args-item {
+    display: inline-flex;
     text-align: left;
     margin: 10px 40px 10px 0;
-    display: inline-flex;
-    align-items: center;
     .ant-input-number {
       width: 100px;
     }
@@ -112,13 +129,15 @@
       padding: 12px 16px;
     }
     .mainlist-arg-item, .wave-arg-item {
-      display: inline-block;
+      display: inline-flex;
+      justify-items: center;
       margin: 8px 36px 8px 0;
       .ant-radio-group {
         padding: 0;
         margin: 0;
       }
       .args-item-name {
+        line-height: 32px;
         margin-right: 20px;
         font-weight: bold;
       }

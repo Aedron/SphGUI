@@ -55,13 +55,22 @@ class Sphere extends Component {
           index={index}
           name="Sphere (球)"
         />
-        <div className="mainlist-arg-item">
-          <span className="args-item-name">半径: </span>
-          <Point point={toJS(data.point)} onChange={store.onChangeSinglePoint.bind(store, index)} />
-        </div>
-        <div className="mainlist-arg-item">
-          <span className="args-item-name">半径: </span>
-          <InputNumber value={data.radius} min={0} onChange={store.onChangeRadius.bind(store, index)} />
+        <div className="line-points mainlist-item">
+          <div className="mainlist-header">
+            <span>特征参数</span>
+            <div>
+            </div>
+          </div>
+          <div className="mainlist-args">
+            <div className="mainlist-arg-item">
+              <span className="args-item-name">球心坐标: </span>
+              <Point point={toJS(data.point)} onChange={store.onChangeSinglePoint.bind(store, index)} />
+            </div>
+            <div className="mainlist-arg-item">
+              <span className="args-item-name">半径: </span>
+              <InputNumber value={data.radius} min={0} onChange={store.onChangeRadius.bind(store, index)} />
+            </div>
+          </div>
         </div>
       </div>
     );
