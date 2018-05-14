@@ -36,6 +36,7 @@ class Model extends Component {
   ];
   render() {
     const { store } = this.props;
+    const path = store.filePath || store.xmlPath;
 
     return (
       <div className={`model ${store.view === 'model' ? 'active' : ''}`}>
@@ -73,7 +74,8 @@ class Model extends Component {
           <p className="title">模型生成</p>
           <Button
             if={!store.execing}
-            disabled={!store.filePath} onClick={store.exec}
+            disabled={!path}
+            onClick={store.exec}
             icon="caret-right"
             shape="circle"
           />
@@ -84,7 +86,7 @@ class Model extends Component {
             shape="circle"
           />
 
-          <p if={store.filePath}>算例路径: {store.filePath}</p>
+          <p if={path}>算例路径: {path}</p>
           <span else>算例未加载</span>
           <Timeline
             if={store.step}

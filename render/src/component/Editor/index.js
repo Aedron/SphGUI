@@ -22,6 +22,12 @@ class Editor extends Component {
     showLineNumbers: true,
     tabSize: 2,
   };
+  onExec = () => {
+    const { store } = this.props;
+    store.savePath = null;
+    store.genXML(store.xmlContent);
+    store.toggleView('model');
+  };
 
   render() {
     const { store } = this.props;
@@ -29,7 +35,7 @@ class Editor extends Component {
     return (
       <div className={`editor ${store.view === 'editor' ? 'active' : ''}`}>
         <AceEditor
-          if={store.xmlContent}
+          if={store.xmlContent !== null}
           mode="xml"
           theme="tomorrow"
           name="blah2"
@@ -45,15 +51,16 @@ class Editor extends Component {
         />
         <div className="editor-bar">
           <div className={store.isFileChanged ? 'changed' : 'unchanged'}>
-            {store.isFileChanged ? '更改未保存' : '已保存'}: {store.xmlPath}
+            <span>{store.isFileChanged ? '更改未保存' : '已保存'}: </span>
+            <span>{store.xmlPath}</span>
           </div>
           <div className="btns">
             <div className="btn" onClick={store.onSaveXML}>
               <Icon type="save" />
               <span>保存</span>
             </div>
-            <div className="btn">
-              <Icon type="caret-right" />
+            <div className="btn" onClick={this.onExec}>
+              <Icon type="caret-right"/>
               <span>运行</span>
             </div>
           </div>

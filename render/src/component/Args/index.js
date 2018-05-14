@@ -161,7 +161,7 @@ class Args extends Component {
       <div className={`args ${store.view === 'args' ? 'active' : ''}`}>
         <Collapse
           bordered={false}
-          defaultActiveKey={['constants']}
+          defaultActiveKey={['mainlist']}
         >
           {/*container*/}
           <Panel

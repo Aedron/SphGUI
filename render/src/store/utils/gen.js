@@ -39,22 +39,18 @@ function genMkConfig(mkConfig) {
 // Constants
 function genConstants(constants) {
   const v = constants.map((i) => {
-    let {name, value, displayName, unit} = i;
+    let {name, options, value, displayName, unit, auto} = i;
     let v;
-    if (typeof value !== 'object') {
-      v = genKV('value', value);
+    if (Array.isArray(toJS(value))) {
+      v = genKVS(value, options);
     } else {
-      if (Array.isArray(toJS(value))) {
-        v = genKVS(value);
-      } else {
-        v = Object.keys(value)
-          .map(k => genKV(k, value[k]))
-          .join(' ');
-      }
+      v = genKV('value', value);
     }
     displayName = genKV('comment', displayName);
     unit = genKV('units_comment', unit);
-    return `<${name} ${v}${displayName}${unit}/>`
+    auto = typeof auto === 'boolean' ?
+      genKV('auto', auto.toString()) : '';
+    return `<${name} ${v}${displayName}${auto}${unit}/>`
   }).join('\n');
   return `<constantsdef>\n${v}\n</constantsdef>`
 }

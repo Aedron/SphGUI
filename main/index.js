@@ -1,8 +1,9 @@
 
 const { app, Menu } = require("electron");
 const path = require('path');
-const url = require('path');
+const url = require('url');
 const env = require("env");
+
 
 const devMenuTemplate = require("./menu/dev_menu_template");
 const editMenuTemplate = require("./menu/edit_menu_template");
@@ -50,3 +51,8 @@ app.on("ready", () => {
 app.on("window-all-closed", () => {
   app.quit();
 });
+
+
+module.exports = {
+  app
+};

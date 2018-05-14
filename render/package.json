@@ -17,7 +17,10 @@
   "devDependencies": {
     "babel-plugin-import": "^1.7.0",
     "babel-plugin-jsx-for-directive": "^0.0.5",
+    "babel-plugin-jsx-if-directive": "^0.0.7",
+    "babel-plugin-mobx-deep-action": "^1.6.1",
     "css-loader": "^0.28.11",
+    "node-sass": "^4.9.0",
     "prop-types": "^15.6.1",
     "react-app-rewire-eslint": "^0.2.3",
     "react-app-rewire-mobx": "^1.0.8",

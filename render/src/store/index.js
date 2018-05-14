@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, runInAction } from 'mobx';
 import { message } from 'antd';
 
 import { loadTemplate, genXML } from './utils';
@@ -16,8 +16,11 @@ const {
 const { remote, ipcRenderer } = window.require('electron');
 const { dialog } = remote.require('electron');
 const remoteRequire = remote.require;
-const fs = remoteRequire('fs');
+const fs = remoteRequire('fs-extra');
 const path = remoteRequire('path');
+const os = remoteRequire('os');
+const cp = remoteRequire('child_process');
+const { app } = remoteRequire('./index.js');
 
 
 
@@ -773,7 +776,7 @@ class Store {
   /*
   *** Editor
    */
-  @observable fileContent = ``;
+  @observable fileContent = null;
   @observable xmlContent = null;
   @observable xmlPath = null;
   @action selectXML = () => {
@@ -796,6 +799,7 @@ class Store {
     this.xmlContent = content;
   };
   @action onSaveXML = () => {
+    if (this.view !== 'editor') return;
     fs.writeFileSync(this.xmlPath, this.xmlContent, 'utf-8');
     this.fileContent = this.xmlContent;
   };
@@ -806,66 +810,87 @@ class Store {
   *** GenXML
    */
   @observable savePath = null;
-  @observable filePath = null;
-  @action selectSavePath = (callback) => {
-    const path = dialog.showSaveDialog();
-    if (!path) return;
-    this.savePath = path;
-    callback && callback();
+  @computed get filePath() {
+    if (!this.savePath) return null;
+    return path.join(this.savePath, './Case_Def.xml');
   };
-  @action genXML = () => {
-    const { savePath } = this;
-    const save = () => {
-      const xml = genXML(this);
-      console.log(xml);
-      fs.writeFileSync(filename, xml, 'utf-8');
-      this.filePath = filename;
-    };
-
+  @action selectSavePath = (callback) => {
+    const path = dialog.showOpenDialog({
+        title: '选择文件夹',
+        properties: ['openDirectory']
+    });
+    if (!path) return;
+    this.savePath = path[0];
+    callback && runInAction(callback);
+  };
+  @action genXML = (xml) => {
+    const { savePath, filePath } = this;
     if (!savePath) {
-      return this.selectSavePath(this.genXML);
-    }
-    if (!fs.existsSync(savePath)) {
-      fs.mkdirSync(savePath);
+      return this.selectSavePath(this.genXML.bind(this, xml));
     }
 
-    const filename = path.join(savePath, './Case_Def.xml');
-    if (fs.existsSync(filename)) {
+    if (!xml) xml = genXML(this);
+    if (fs.existsSync(filePath)) {
       return dialog.showMessageBox({
         type: 'question',
         title: '覆盖Case文件',
-        message: `${filename}已存在, 是否覆盖?`,
+        message: `${filePath}已存在, 是否覆盖?`,
         buttons: ['覆盖', '取消'],
         defaultId: 0
       }, (selected) => {
         if (selected === 0) {
-          fs.unlinkSync(filename);
-          save();
+          fs.removeSync(filePath);
+          fs.writeFileSync(filePath, xml, 'utf-8');
         }
       });
     }
-    save();
+    fs.writeFileSync(filePath, xml, 'utf-8');
   };
   /*
   *** Exec
    */
   @observable execing = false;
   @observable stepIndex = 5;
-  @computed get step() {
-    const { fileProcess: [done, total], stepIndex } = this;
-    return [
-      ['生成算例', []],
-      ['预处理', ['生成算例']],
-      [`计算粒子数据\n已完成: ${done}\n一共: ${total}`, ['生成算例', '预处理']],
-      ['格式转换', ['生成算例', '预处理', '计算粒子数据']],
-      ['保存文件', ['生成算例', '预处理', '计算粒子数据', '格式转换']],
-      [null, ['生成算例', '预处理', '计算粒子数据', '格式转换', '完成']]
-    ][stepIndex];
-  }
   @observable fileProcess = [666, 999];
-  @observable exec = () => {
-
-  }
+  @computed get step() {
+        const { fileProcess: [done, total], stepIndex } = this;
+        return [
+            ['生成算例', []],
+            ['预处理', ['生成算例']],
+            [`计算粒子数据\n已完成: ${done}\n一共: ${total}`, ['生成算例', '预处理']],
+            ['格式转换', ['生成算例', '预处理', '计算粒子数据']],
+            ['保存文件', ['生成算例', '预处理', '计算粒子数据', '格式转换']],
+            [null, ['生成算例', '预处理', '计算粒子数据', '格式转换', '完成']]
+        ][stepIndex];
+}
+  @action exec = () => {
+    if (!this.savePath) {
+      const callback = () => {
+          fs.writeFileSync(this.filePath, this.xmlContent, 'utf-8');
+          this.exec();
+      };
+      return this.selectSavePath(callback.bind(this));
+    }
+    const outPath = path.join(this.savePath, './Case_out');
+    if (fs.existsSync(outPath)) {
+      fs.removeSync(outPath);
+    }
+    fs.mkdirSync(outPath);
+    this.execGenCase();
+  };
+  @action execGenCase = () => {
+    const platform = os.platform();
+    const binPath = path.join(app.getAppPath(), `./bin/${platform}/GenCase`);
+    const command = `cd ${this.savePath}; ${binPath} Case_Def Case_out/Case -save:all`;
+    console.log(command);
+    cp.exec(command, (error, stdout) => {
+      if (/\*\*\*\sException/.test(stdout)) {
+        const e = stdout.split('[LoadXML]')[1];
+        console.log(e);
+        dialog.showErrorBox('出错', (e || 'Unknow Error').trim());
+      }
+    });
+  };
 }
 
 
