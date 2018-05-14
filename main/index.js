@@ -9,10 +9,10 @@ const editMenuTemplate = require("./menu/edit_menu_template");
 const createWindow = require("./utils/window");
 
 
-const setApplicationMenu = () => {
-  const menus = [editMenuTemplate];
+const setApplicationMenu = (mainWindow) => {
+  const menus = [editMenuTemplate(mainWindow)];
   if (env.name !== "production") {
-    menus.push(devMenuTemplate);
+    menus.push(devMenuTemplate(mainWindow));
   }
   Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
@@ -25,8 +25,6 @@ if (env.name !== "production") {
 
 
 app.on("ready", () => {
-  setApplicationMenu();
-
   const mainWindow = createWindow("main", {
     width: 1000,
     height: 600
@@ -44,6 +42,8 @@ app.on("ready", () => {
   if (env.name === "development") {
     mainWindow.openDevTools();
   }
+
+  setApplicationMenu(mainWindow);
 });
 
 

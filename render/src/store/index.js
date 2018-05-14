@@ -13,7 +13,7 @@ const {
   fillModeMap, defaultFloatAttrMap
 } = data;
 
-const { remote } = window.require('electron');
+const { remote, ipcRenderer } = window.require('electron');
 const { dialog } = remote.require('electron');
 const remoteRequire = remote.require;
 const fs = remoteRequire('fs');
@@ -22,11 +22,23 @@ const path = remoteRequire('path');
 
 
 class Store {
+  constructor() {
+    ipcRenderer.on('run', this.runAction);
+  }
+  @action runAction = (sender, type) => {
+    switch (type) {
+      case 'save': return this.onSaveXML();
+      case 'exec': return null;
+    }
+  };
   /*
   *** view
    */
   @observable viewIndex = 0;
   @action toggleView = (view) => {
+    if ((view === 2 || view === 'editor') && !this.xmlContent) {
+      return this.selectXML();
+    }
     if (typeof view === 'number') this.viewIndex = view;
     else {
       const index = this.views.indexOf(view);
@@ -758,6 +770,38 @@ class Store {
     const { wave: { regular, irregular } } = this.mainList[index];
     (isRegular ? regular : irregular).direction[i] = v;
   };
+  /*
+  *** Editor
+   */
+  @observable fileContent = ``;
+  @observable xmlContent = null;
+  @observable xmlPath = null;
+  @action selectXML = () => {
+    const xmlPath = dialog.showOpenDialog({
+      title: '导入外部算例',
+      properties: ['openFile'],
+      filters: [
+        { name: '算例文件', extensions: ['xml'] }
+      ]
+    });
+    if (xmlPath) {
+      this.xmlPath = xmlPath[0];
+      const content = fs.readFileSync(this.xmlPath, 'utf-8');
+      this.xmlContent = content;
+      this.fileContent = content;
+      this.toggleView('editor');
+    }
+  };
+  @action onChangeXML = (content, action) => {
+    this.xmlContent = content;
+  };
+  @action onSaveXML = () => {
+    fs.writeFileSync(this.xmlPath, this.xmlContent, 'utf-8');
+    this.fileContent = this.xmlContent;
+  };
+  @computed get isFileChanged() {
+    return this.xmlContent !== this.fileContent;
+  }
   /*
   *** GenXML
    */

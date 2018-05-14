@@ -2,7 +2,7 @@
 const { app, BrowserWindow } = require("electron");
 
 
-module.exports = {
+module.exports = (window) => ({
   label: "Development",
   submenu: [
     {
@@ -27,4 +27,4 @@ module.exports = {
       }
     }
   ]
-};
+});

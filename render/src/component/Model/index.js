@@ -44,7 +44,7 @@ class Model extends Component {
             <Icon type="edit" />
             <span>编辑参数</span>
           </div>
-          <div>
+          <div onClick={store.selectXML}>
             <Icon type="folder-open" />
             <span>载入XML</span>
           </div>
