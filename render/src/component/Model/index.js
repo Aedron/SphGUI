@@ -84,6 +84,7 @@ class Model extends Component {
             icon="close"
             type="danger"
             shape="circle"
+            onClick={store.stopExec}
           />
 
           <p if={path}>算例路径: {path}</p>

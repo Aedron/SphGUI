@@ -8,7 +8,7 @@ module.exports = [
   {
     name: 'gravity',
     displayName: '重力加速度',
-    value: [0, 0, 0],
+    value: [0, 0, -9.81],
     unit: 'm/s^2'
   },
   {

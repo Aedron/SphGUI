@@ -20,13 +20,13 @@ const fs = remoteRequire('fs-extra');
 const path = remoteRequire('path');
 const os = remoteRequire('os');
 const cp = remoteRequire('child_process');
-const { app } = remoteRequire('./index.js');
-
+const { app, chokidar } = remoteRequire('./index.js');
 
 
 class Store {
   constructor() {
     ipcRenderer.on('run', this.runAction);
+    ipcRenderer.on('exit', this.killAll);
   }
   @action runAction = (sender, type) => {
     switch (type) {
@@ -252,7 +252,7 @@ class Store {
       },
       motion: null,
       float: null,
-      points: [[0, 0, 0], [0, 0, 0]],
+      points: [[0, 0, 0], [1, 1, 1]],
       boxFill: [boxFillMap.SOLID]
     };
     this.mainList.push(box);
@@ -850,8 +850,8 @@ class Store {
   *** Exec
    */
   @observable execing = false;
-  @observable stepIndex = 5;
-  @observable fileProcess = [666, 999];
+  @observable stepIndex = -1;
+  @observable fileProcess = [0, 0];
   @computed get step() {
         const { fileProcess: [done, total], stepIndex } = this;
         return [
@@ -862,8 +862,18 @@ class Store {
             ['保存文件', ['生成算例', '预处理', '计算粒子数据', '格式转换']],
             [null, ['生成算例', '预处理', '计算粒子数据', '格式转换', '完成']]
         ][stepIndex];
-}
-  @action exec = () => {
+  }
+  @action stopExec = () => {
+    this.execing = false;
+    this.stepIndex = -1;
+    this.killAll();
+    if (this.watcher) {
+      this.watcher.close();
+      this.watcher = null;
+    }
+  };
+  @action exec = async () => {
+    this.execing = true;
     if (!this.savePath) {
       const callback = () => {
           fs.writeFileSync(this.filePath, this.xmlContent, 'utf-8');
@@ -876,19 +886,88 @@ class Store {
       fs.removeSync(outPath);
     }
     fs.mkdirSync(outPath);
-    this.execGenCase();
+    try {
+      await this.execGenCase();
+      await this.execSPH();
+    } catch (e) {
+
+    }
+    this.stopExec();
   };
   @action execGenCase = () => {
+    this.stepIndex = 0;
     const platform = os.platform();
     const binPath = path.join(app.getAppPath(), `./bin/${platform}/GenCase`);
     const command = `cd ${this.savePath}; ${binPath} Case_Def Case_out/Case -save:all`;
-    console.log(command);
-    cp.exec(command, (error, stdout) => {
-      if (/\*\*\*\sException/.test(stdout)) {
-        const e = stdout.split('[LoadXML]')[1];
-        console.log(e);
-        dialog.showErrorBox('出错', (e || 'Unknow Error').trim());
+    return this.execCommand(command);
+  };
+  @action execSPH = () => {
+    this.stepIndex = 1;
+    this.watchPartFile();
+    setTimeout(() => { this.stepIndex = 2 }, 3000);
+    const platform = os.platform();
+    const binPath = path.join(app.getAppPath(), `./bin/${platform}/DualSPH`);
+    const command = `cd ${this.savePath}; ${binPath} Case_out/Case Case_out -svres -cpu`;
+    return this.execCommand(command);
+  };
+  watcher = null;
+  @action watchPartFile = () => {
+    const { filePath, fileProcess } = this;
+    const content = fs.readFileSync(filePath, 'utf-8');
+    try {
+      const boundCount = parseInt(content.match(/boundcount="\d+"/)[0].match(/\d+/)[0]);
+      const fluidCount = parseInt(content.match(/fluidcount="\d+"/)[0].match(/\d+/)[0]);
+      fileProcess[1] = boundCount + fluidCount;
+    } catch (e) {
+      return this.stopExec();
+    }
+    const watcher = chokidar.watch(path.join(this.savePath, './Case_out'), {
+      persistent: true
+    });
+    const onAddFile = (filePath) => {
+      debugger;
+      const filename = path.baseName(filePath);
+      fileProcess[0] = parseFloat(filename.match(/Part_\d+\.bi4/)[0].match(/\d+/)[0]);
+    };
+    watcher.on('add', onAddFile.bind(this));
+    this.watcher = watcher;
+  };
+  // Utils
+  tasks = [];
+  removeTask = (task) => this.tasks = this.tasks.filter(i => i === task);
+  killAll = () => {
+    this.tasks.forEach((task) => {
+      try {
+        task.kill();
+      } catch (e) {
+        console.error('Kill process failed: ', e);
       }
+    });
+    this.tasks = [];
+  };
+  onProcessData = (data) => {
+    console.log(data);
+    console.log('\n');
+    if (/\*\*\*\sException/.test(data)) {
+      const e = '*** Exception' + (data || 'Unknown Error').toString().split('*** Exception')[1];
+      dialog.showErrorBox('出错', e.trim());
+    }
+  };
+  execCommand = (command) => {
+    console.log('exec: ', command);
+    const { removeTask } = this;
+    return new Promise((resolve, reject) => {
+      const process = cp.exec(command);
+      this.tasks.push(process);
+      process.stdout.on('data', this.onProcessData);
+      process.on('exit', function (code) {
+        removeTask(process);
+        if (code === 0) {
+          resolve();
+        } else {
+          reject();
+        }
+      });
     });
   };
 }

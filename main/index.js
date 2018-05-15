@@ -3,6 +3,7 @@ const { app, Menu } = require("electron");
 const path = require('path');
 const url = require('url');
 const env = require("env");
+const chokidar = require('chokidar');
 
 
 const devMenuTemplate = require("./menu/dev_menu_template");
@@ -39,6 +40,9 @@ app.on("ready", () => {
     //   slashes: true
     // })
   );
+  mainWindow.on('close', () => {
+    mainWindow.webContents.send('exit');
+  });
 
   if (env.name === "development") {
     mainWindow.openDevTools();
@@ -52,7 +56,7 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 
-
 module.exports = {
-  app
+  app,
+  chokidar
 };
