@@ -118,3 +118,4 @@ fabric.properties
 node_modules
 /_node_modules/
 /render/_node_modules/
+/render/__node_modules/
