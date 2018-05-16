@@ -33,12 +33,8 @@ app.on("ready", () => {
   });
 
   mainWindow.loadURL(
-    'http://localhost:3006/'
-    // url.format({
-    //   pathname: path.join(__dirname, "app.html"),
-    //   protocol: "file:",
-    //   slashes: true
-    // })
+    // 'http://localhost:3006/'
+    `file://${path.join(app.getAppPath(), "./render/build/index.html")}`
   );
   mainWindow.on('close', () => {
     mainWindow.webContents.send('exit');
