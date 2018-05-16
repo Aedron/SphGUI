@@ -889,11 +889,13 @@ class Store {
     try {
       await this.execGenCase();
       await this.execSPH();
+      await this.execPartVtk();
     } catch (e) {
-
+      this.stopExec();
     }
-    this.stopExec();
+    this.execing = false;
   };
+  // GenCase
   @action execGenCase = () => {
     this.stepIndex = 0;
     const platform = os.platform();
@@ -901,6 +903,7 @@ class Store {
     const command = `cd ${this.savePath}; ${binPath} Case_Def Case_out/Case -save:all`;
     return this.execCommand(command);
   };
+  // SPH
   @action execSPH = () => {
     this.stepIndex = 1;
     this.watchPartFile();
@@ -922,6 +925,7 @@ class Store {
       return this.stopExec();
     }
     const w = (function (num) {
+      this.stepIndex = 2;
       this.fileProcess[0] = num;
     }).bind(this);
     const watchPath = path.join(this.savePath, './Case_out');
@@ -930,6 +934,22 @@ class Store {
       w(num);
     });
     this.watcher = watcher;
+  };
+  @action execPartVtk = () => {
+    this.stepIndex = 3;
+    const platform = os.platform();
+    const VTKBinPath = path.join(app.getAppPath(), `./bin/${platform}/PartVTK`);
+    const VTKOutBinPath = path.join(app.getAppPath(), `./bin/${platform}/PartVTKOut`);
+    const command = [
+      `cd ${this.savePath}; ${VTKBinPath}`,
+      `-dirin Case_out -filexml Case_out/Case.xml`,
+      `-savevtk Case_out/PartFluid`,
+      `-onlytype:-all,fluid -vars:+idp,+vel,+rhop,+press,+vor;`,
+      `${VTKOutBinPath} -dirin Case_out -filexml Case_out/Case.xml`,
+      `-savevtk Case_out/PartFluidOut`,
+      `-SaveResume Case_out/ResumeFluidOut`
+    ].join(' ');
+    return this.execCommand(command);
   };
   // Utils
   tasks = [];
