@@ -20,7 +20,7 @@ const fs = remoteRequire('fs-extra');
 const path = remoteRequire('path');
 const os = remoteRequire('os');
 const cp = remoteRequire('child_process');
-const { app, chokidar } = remoteRequire('./index.js');
+const { app } = remoteRequire('./index.js');
 
 
 class Store {
@@ -921,15 +921,14 @@ class Store {
     } catch (e) {
       return this.stopExec();
     }
-    const watcher = chokidar.watch(path.join(this.savePath, './Case_out'), {
-      persistent: true
+    const w = (function (num) {
+      this.fileProcess[0] = num;
+    }).bind(this);
+    const watchPath = path.join(this.savePath, './Case_out');
+    const watcher = fs.watch(watchPath, { persistent: true }, () => {
+      const num = fs.readdirSync(watchPath).filter(p => /Part_\d+\.bi4/.test(p)).length;
+      w(num);
     });
-    const onAddFile = (filePath) => {
-      debugger;
-      const filename = path.baseName(filePath);
-      fileProcess[0] = parseFloat(filename.match(/Part_\d+\.bi4/)[0].match(/\d+/)[0]);
-    };
-    watcher.on('add', onAddFile.bind(this));
     this.watcher = watcher;
   };
   // Utils
