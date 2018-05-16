@@ -893,7 +893,11 @@ class Store {
     } catch (e) {
       this.stopExec();
     }
-    this.execing = false;
+    this.stepIndex = 4;
+    setTimeout(() => {
+      this.execing = false;
+      this.stepIndex = 5;
+    }, 3000);
   };
   // GenCase
   @action execGenCase = () => {
@@ -907,7 +911,6 @@ class Store {
   @action execSPH = () => {
     this.stepIndex = 1;
     this.watchPartFile();
-    setTimeout(() => { this.stepIndex = 2 }, 3000);
     const platform = os.platform();
     const binPath = path.join(app.getAppPath(), `./bin/${platform}/DualSPH`);
     const command = `cd ${this.savePath}; ${binPath} Case_out/Case Case_out -svres -cpu`;
@@ -925,7 +928,7 @@ class Store {
       return this.stopExec();
     }
     const w = (function (num) {
-      this.stepIndex = 2;
+      if (this.stepIndex < 2) this.stepIndex = 2;
       this.fileProcess[0] = num;
     }).bind(this);
     const watchPath = path.join(this.savePath, './Case_out');
@@ -935,6 +938,7 @@ class Store {
     });
     this.watcher = watcher;
   };
+  // PartVTK
   @action execPartVtk = () => {
     this.stepIndex = 3;
     const platform = os.platform();
