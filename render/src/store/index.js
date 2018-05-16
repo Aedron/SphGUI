@@ -851,7 +851,7 @@ class Store {
    */
   @observable execing = false;
   @observable stepIndex = -1;
-  @observable fileProcess = [0, 0];
+  @observable fileProcess = [0, 250];
   @computed get step() {
         const { fileProcess: [done, total], stepIndex } = this;
         return [
@@ -918,18 +918,18 @@ class Store {
   };
   watcher = null;
   @action watchPartFile = () => {
-    const { filePath, fileProcess } = this;
-    const content = fs.readFileSync(filePath, 'utf-8');
-    try {
-      const boundCount = parseInt(content.match(/boundcount="\d+"/)[0].match(/\d+/)[0]);
-      const fluidCount = parseInt(content.match(/fluidcount="\d+"/)[0].match(/\d+/)[0]);
-      fileProcess[1] = boundCount + fluidCount;
-    } catch (e) {
-      return this.stopExec();
-    }
+    // const { filePath, fileProcess } = this;
+    // const content = fs.readFileSync(filePath, 'utf-8');
+    // try {
+    //   const boundCount = parseInt(content.match(/boundcount="\d+"/)[0].match(/\d+/)[0]);
+    //   const fluidCount = parseInt(content.match(/fluidcount="\d+"/)[0].match(/\d+/)[0]);
+    //   fileProcess[1] = boundCount + fluidCount;
+    // } catch (e) {
+    //   return this.stopExec();
+    // }
     const w = (function (num) {
       if (this.stepIndex < 2) this.stepIndex = 2;
-      this.fileProcess[0] = num;
+      this.fileProcess[0] = Math.min(num, this.fileProcess[1]);
     }).bind(this);
     const watchPath = path.join(this.savePath, './Case_out');
     const watcher = fs.watch(watchPath, { persistent: true }, () => {
