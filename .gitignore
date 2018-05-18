@@ -123,3 +123,9 @@ node_modules
 !/build/
 /dist/
 /render/build/
+/render/build/index.html
+/render/build/service-worker.js
+/render/build/static/
+/render/build/favicon.ico
+/render/build/asset-manifest.json
+/render/build/manifest.json
