@@ -119,3 +119,7 @@ node_modules
 /_node_modules/
 /render/_node_modules/
 /render/__node_modules/
+/SphGUI-linux-x64/
+!/build/
+/dist/
+/render/build/

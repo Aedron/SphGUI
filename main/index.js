@@ -3,7 +3,6 @@ const { app, Menu } = require("electron");
 const path = require('path');
 const url = require('url');
 const env = require("env");
-const chokidar = require('chokidar');
 
 
 const devMenuTemplate = require("./menu/dev_menu_template");
@@ -29,7 +28,7 @@ if (env.name !== "production") {
 app.on("ready", () => {
   const mainWindow = createWindow("main", {
     width: 1000,
-    height: 600
+    height: 1100
   });
 
   mainWindow.loadURL(
@@ -53,6 +52,5 @@ app.on("window-all-closed", () => {
 });
 
 module.exports = {
-  app,
-  chokidar
+  app
 };

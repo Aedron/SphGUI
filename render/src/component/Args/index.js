@@ -41,7 +41,7 @@ class Args extends Component {
     showAdd: true
   };
   componentDidMount = () => {
-    this.onAdd('box');
+    // this.onAdd('box');
   };
   onOk = () => {
     this.props.store.toggleView('model');
