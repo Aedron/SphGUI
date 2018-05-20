@@ -903,7 +903,7 @@ class Store {
   @action execGenCase = () => {
     this.stepIndex = 0;
     const platform = os.platform();
-    const binPath = path.join(app.getAppPath(), `./bin/${platform}/GenCase`);
+    const binPath = path.join(app.getAppPath(), `./bin/${platform}/GenCase${platform === 'win32' ? '.exe' : ''}`);
     const command = `cd ${this.savePath}; ${binPath} Case_Def Case_out/Case -save:all`;
     return this.execCommand(command);
   };
@@ -912,7 +912,7 @@ class Store {
     this.stepIndex = 1;
     this.watchPartFile();
     const platform = os.platform();
-    const binPath = path.join(app.getAppPath(), `./bin/${platform}/DualSPH`);
+    const binPath = path.join(app.getAppPath(), `./bin/${platform}/DualSPH${platform === 'win32' ? '.exe' : ''}`);
     const command = `cd ${this.savePath}; ${binPath} Case_out/Case Case_out -svres -cpu`;
     return this.execCommand(command);
   };
@@ -942,8 +942,8 @@ class Store {
   @action execPartVtk = () => {
     this.stepIndex = 3;
     const platform = os.platform();
-    const VTKBinPath = path.join(app.getAppPath(), `./bin/${platform}/PartVTK`);
-    const VTKOutBinPath = path.join(app.getAppPath(), `./bin/${platform}/PartVTKOut`);
+    const VTKBinPath = path.join(app.getAppPath(), `./bin/${platform}/PartVTK${platform === 'win32' ? '.exe' : ''}`);
+    const VTKOutBinPath = path.join(app.getAppPath(), `./bin/${platform}/PartVTKOut${platform === 'win32' ? '.exe' : ''}`);
     const command = [
       `cd ${this.savePath}; ${VTKBinPath}`,
       `-dirin Case_out -filexml Case_out/Case.xml`,
