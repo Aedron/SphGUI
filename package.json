@@ -24,11 +24,10 @@
     "directories": {
       "output": "./dist",
       "app": "./",
-      "buildResources": "build"
+      "buildResources": "./build"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "build/icons"
+      "target": "AppImage"
     },
     "appImage": {
       "synopsis": "GUI for DualSPH",
@@ -47,7 +46,7 @@
       "mirror": "https://npm.taobao.org/mirrors/electron/",
       "verifyChecksum": true
     },
-    "asar": true,
+    "asar": false,
     "compression": "store"
   }
 }
