@@ -2,9 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { Radio } from 'antd';
+import { Radio, Popover } from 'antd';
 
 import { data } from '../../../utils';
+import DrawModePic from '../../../static/docPics/draw-mode.png';
 
 
 const { drawModes } = data;
@@ -17,7 +18,18 @@ function DrawMode(props) {
 
   return (
     <div className="mainlist-arg-item">
-      <span className="args-item-name">DrawMode:</span>
+      <Popover
+        mouseEnterDelay={0.5}
+        content={(
+          <div className="doc">
+            <p>指示创建粒子生成点的模式</p>
+            <img src={DrawModePic} />
+          </div>
+        )}
+        title="DrawMode"
+      >
+        <span className="args-item-name">DrawMode:</span>
+      </Popover>
       <RadioGroup
         onChange={store.onChangeDrawMode.bind(store, index)}
         value={data.drawMode}

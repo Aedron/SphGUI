@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { Button, InputNumber, Radio, Checkbox } from 'antd';
+import { Button, InputNumber, Radio, Checkbox, Popover } from 'antd';
 import Point from '../Point';
 import Common from '../Common';
 import { withStore } from '../../../store';
@@ -12,6 +12,7 @@ import { data } from '../../../utils';
 
 import "./index.scss";
 import {boxFillMap} from "../../../utils/data";
+import BoxFill from '../../../static/docPics/boxfill.png';
 
 
 const { typesMap, boxFills } = data;
@@ -64,7 +65,17 @@ class Box extends Component {
           </div>
           <div className="mainlist-args">
             <div className="mainlist-arg-item">
-              <span className="args-item-name">BoxFill</span>
+              <Popover
+                mouseEnterDelay={0.5}
+                content={(
+                  <div className="doc">
+                    <img src={BoxFill} />
+                  </div>
+                )}
+                title="BoxFill"
+              >
+                <span className="args-item-name">BoxFill</span>
+              </Popover>
               <Checkbox
                 for={c in boxFills}
                 onChange={store.onChangeBoxFill.bind(store, index, c)}

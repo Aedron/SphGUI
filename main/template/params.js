@@ -38,8 +38,8 @@ module.exports = [
     value: 1,
     disable: false,
     options: {
-      1: 'Artificial',
-      2: 'Laminar+SPS'
+      1: 'Artificial (人造)',
+      2: 'Laminar + SPS (层流 + SPS)'
     }
   },
   {
@@ -62,10 +62,10 @@ module.exports = [
     value: 0,
     disable: true,
     options: {
-      0: 'None',
-      1: 'Ignore bound',
-      2: 'Ignore fixed',
-      3: 'Full'
+      0: '无',
+      1: 'Ignore bound (忽略绑定)',
+      2: 'Ignore fixed (忽略固定)',
+      3: 'Full (不忽略)'
     }
   },
   {
@@ -120,8 +120,8 @@ module.exports = [
     value: 0,
     disable: false,
     options: {
-      0: 'Only fluid/floating',
-      1: 'All'
+      0: '仅流体/浮动',
+      1: '全部'
     }
   },
   {

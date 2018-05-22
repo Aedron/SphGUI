@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox } from 'antd';
+import { Checkbox, Popover } from 'antd';
 
 import { data } from '../../../utils';
 
@@ -18,7 +18,17 @@ function ShapeMode(props) {
 
   return (
     <div className="mainlist-arg-item">
-      <span className="args-item-name">ShapeMode:</span>
+      <Popover
+        mouseEnterDelay={0.5}
+        content={(
+          <div className="doc">
+            <p>定义创建VTK文件的绘制操作</p>
+          </div>
+        )}
+        title="DrawMode"
+      >
+        <span className="args-item-name">ShapeMode:</span>
+      </Popover>
       <CheckboxGroup
         options={shapeModes.map(i => ({ label: i, value: i }))}
         onChange={store.onChangeShapeMode.bind(store, index)}

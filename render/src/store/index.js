@@ -37,7 +37,7 @@ class Store {
   /*
   *** view
    */
-  @observable viewIndex = 0;
+  @observable viewIndex = 1;
   @action toggleView = (view) => {
     if ((view === 2 || view === 'editor') && !this.xmlContent) {
       return this.selectXML();

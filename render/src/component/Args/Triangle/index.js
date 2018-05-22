@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { Button, InputNumber, Radio } from 'antd';
+import { Button, Popover, Radio } from 'antd';
 import Common from '../Common';
 import Point from '../Point';
 import { withStore } from '../../../store';
 import { data } from '../../../utils';
+import Quadri from '../../../static/docPics/quadri.png';
+import Strip from '../../../static/docPics/strip.png';
 
 import "./index.scss";
 
@@ -58,9 +60,41 @@ class Triangle extends Component {
                 onChange={store.onChangeTriangleType.bind(store, index)}
                 value={data.type}
               >
-                <RadioButton value={typesMap.TRIANGLES}>triangles</RadioButton>
-                <RadioButton value={typesMap.QUADRI}>quadri</RadioButton>
-                <RadioButton value={typesMap.STRIP}>strip</RadioButton>
+                <Popover
+                  mouseEnterDelay={0.5}
+                  content={(
+                    <div className="doc">
+                      <p>用三个点绘制一个三角形</p>
+                    </div>
+                  )}
+                  title="Triangle"
+                >
+                  <RadioButton value={typesMap.TRIANGLES}>triangle</RadioButton>
+                </Popover>
+                <Popover
+                  mouseEnterDelay={0.5}
+                  content={(
+                    <div className="doc">
+                      <p>通过四个点绘制由两个三角形组成的四边形(两个三角可以不在一个平面)</p>
+                      <img src={Quadri} />
+                    </div>
+                  )}
+                  title="Triangle"
+                >
+                  <RadioButton value={typesMap.QUADRI}>quadri</RadioButton>
+                </Popover>
+                <Popover
+                  mouseEnterDelay={0.5}
+                  content={(
+                    <div className="doc">
+                      <p>绘制一系列链式三角形</p>
+                      <img src={Strip} />
+                    </div>
+                  )}
+                  title="Triangle"
+                >
+                  <RadioButton value={typesMap.STRIP}>strip</RadioButton>
+                </Popover>
               </RadioGroup>
               <Button
                 icon="plus"

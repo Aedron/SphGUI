@@ -39,3 +39,16 @@ body {
   background-color: #1890ff !important;
   color: white !important;
 }
+
+.doc {
+  max-width: 550px;
+  & > div {
+    margin: 20px 0;
+  }
+  img {
+    width: 500px;
+  }
+  ul {
+    padding: 0 10px;
+  }
+}

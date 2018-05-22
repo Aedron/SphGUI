@@ -3,7 +3,8 @@ module.exports = [
   {
     name: 'lattice',
     value: [1, 1],
-    options: ['bound', 'fluid']
+    options: ['bound', 'fluid'],
+    displayOptions: ['边界', '流体']
   },
   {
     name: 'gravity',
@@ -13,7 +14,7 @@ module.exports = [
   },
   {
     name: 'rhop0',
-    displayName: 'rhop0',
+    displayName: '流体参考密度',
     value: 1000,
     unit: 'kg/m^3'
   },

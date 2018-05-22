@@ -1,11 +1,7 @@
-
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { toJS } from 'mobx';
-import {
-  Collapse, Radio, Tag, InputNumber,
-  Button, Input, Switch
-} from 'antd';
+import React, {Component} from 'react';
+import {observer} from 'mobx-react';
+import {toJS} from 'mobx';
+import {Button, Collapse, Input, InputNumber, Popover, Radio, Switch, Tag, Tooltip} from 'antd';
 
 import Line from './Line';
 import Triangle from './Triangle';
@@ -17,21 +13,22 @@ import Cylinder from './Cylinder';
 import Beach from './Beach';
 import File from './File';
 import Fill from './Fill';
+import Point from './Point'
 
-import { importFile } from './utils';
-import { data } from '../../utils';
-import { withStore } from '../../store';
+import {importFile, genConDocs, genParamsDocs} from './utils';
+import {data} from '../../utils';
+import {withStore} from '../../store';
 
+import Container0 from '../../static/docPics/container0.png';
+import Container1 from '../../static/docPics/container1.png';
 import "./index.scss";
-import Point from "./Point";
 
 
-const { typesMap } = data;
-const { Panel } = Collapse;
-const { Group: ButtonGroup } = Button;
-const { Button: RadioButton, Group: RadioGroup } = Radio;
-const { CheckableTag } = Tag;
-
+const {typesMap} = data;
+const {Panel} = Collapse;
+const {Group: ButtonGroup} = Button;
+const {Button: RadioButton, Group: RadioGroup} = Radio;
+const {CheckableTag} = Tag;
 
 
 @withStore
@@ -41,7 +38,7 @@ class Args extends Component {
     showAdd: true
   };
   componentDidMount = () => {
-    // this.onAdd('box');
+    this.onAdd('box');
   };
   onOk = () => {
     this.props.store.toggleView('model');
@@ -49,24 +46,34 @@ class Args extends Component {
   };
   // mainlist
   onAdd = (type) => {
-    const { props: { store } } = this;
+    const {props: {store}} = this;
     this.onToggleShowAdd();
     switch (type) {
-      case 'file': return this.onAddFile();
-      case 'line': return store.onAddLine();
-      case 'triangle': return store.onAddTriangle();
-      case 'pyramid': return store.onAddPyramid();
-      case 'prism': return store.onAddPrism();
-      case 'box': return store.onAddBox();
-      case 'sphere': return store.onAddSphere();
-      case 'cylinder': return store.onAddCylinder();
-      case 'beach': return store.onAddBeach();
-      case 'fill': return store.onAddFill();
+      case 'file':
+        return this.onAddFile();
+      case 'line':
+        return store.onAddLine();
+      case 'triangle':
+        return store.onAddTriangle();
+      case 'pyramid':
+        return store.onAddPyramid();
+      case 'prism':
+        return store.onAddPrism();
+      case 'box':
+        return store.onAddBox();
+      case 'sphere':
+        return store.onAddSphere();
+      case 'cylinder':
+        return store.onAddCylinder();
+      case 'beach':
+        return store.onAddBeach();
+      case 'fill':
+        return store.onAddFill();
     }
   };
-  onToggleShowAdd = () => this.setState({ showAdd: !this.state.showAdd });
+  onToggleShowAdd = () => this.setState({showAdd: !this.state.showAdd});
   onAddFile = async () => {
-    const { props: { store } } = this;
+    const {props: {store}} = this;
     const files = await importFile();
     if (!files) return;
     files.forEach((path) => {
@@ -78,43 +85,68 @@ class Args extends Component {
   // params
   genOnParamsChange = (i) => {
     return (e) => {
-      const { params } = this.state;
+      const {params} = this.state;
       params[i].value = typeof e === 'object' ? e.target.value : e;
-      return this.setState({ params })
+      return this.setState({params})
     };
   };
   genOnParamsCheck = (i) => {
     return (checked) => {
-      const { params } = this;
+      const {params} = this;
       params[i].disable = !checked;
-      return this.setState({ params })
+      return this.setState({params})
     };
   };
 
   // render
   renderMainList = (o, index) => {
-    const { type } = o;
+    const {type} = o;
     let Component;
     switch (type) {
-      case typesMap.LINE: Component = Line; break;
-      case typesMap.TRIANGLES: Component = Triangle; break;
-      case typesMap.QUADRI: Component = Triangle; break;
-      case typesMap.STRIP: Component = Triangle; break;
-      case typesMap.PYRAMID: Component = Pyramid; break;
-      case typesMap.PRISM: Component = Prism; break;
-      case typesMap.BOX: Component = Box; break;
-      case typesMap.SPHERE: Component = Sphere; break;
-      case typesMap.CYLINDER: Component = Cylinder; break;
-      case typesMap.BEACH: Component = Beach; break;
-      case 'file': Component = File; break;
-      case 'fill': Component = Fill; break;
-      default: return;
+      case typesMap.LINE:
+        Component = Line;
+        break;
+      case typesMap.TRIANGLES:
+        Component = Triangle;
+        break;
+      case typesMap.QUADRI:
+        Component = Triangle;
+        break;
+      case typesMap.STRIP:
+        Component = Triangle;
+        break;
+      case typesMap.PYRAMID:
+        Component = Pyramid;
+        break;
+      case typesMap.PRISM:
+        Component = Prism;
+        break;
+      case typesMap.BOX:
+        Component = Box;
+        break;
+      case typesMap.SPHERE:
+        Component = Sphere;
+        break;
+      case typesMap.CYLINDER:
+        Component = Cylinder;
+        break;
+      case typesMap.BEACH:
+        Component = Beach;
+        break;
+      case 'file':
+        Component = File;
+        break;
+      case 'fill':
+        Component = Fill;
+        break;
+      default:
+        return;
     }
-    return <Component key={index} index={index} />
+    return <Component key={index} index={index}/>
   };
   renderParams = (p, i) => {
-    const { props: { store } } = this;
-    const { name, displayName, value, disable, unit, options } = p;
+    const {props: {store}} = this;
+    const {name, displayName, value, disable, unit, options} = p;
     const onChange = store.onChangeParams.bind(store, i);
     const onChecked = store.onCheckParams.bind(store, i);
     const Component = typeof value === 'number' ? InputNumber : Input;
@@ -126,8 +158,8 @@ class Args extends Component {
         className="args-item"
         key={i}
       >
-        <Switch checked={!disable} onChange={onChecked} size="small" />
-        <span className="args-item-name">{displayName || name}:</span>
+        <Switch checked={!disable} onChange={onChecked} size="small"/>
+        {genParamsDocs(p)}
         <RadioGroup
           if={options}
           value={value}
@@ -155,7 +187,7 @@ class Args extends Component {
   };
 
   render() {
-    const { state, props: { store } } = this;
+    const {state, props: {store}} = this;
 
     return (
       <div className={`args ${store.view === 'args' ? 'active' : ''}`}>
@@ -165,16 +197,40 @@ class Args extends Component {
         >
           {/*container*/}
           <Panel
-            header="geometry.defintion (容器设置)"
+            header={
+              <Popover
+                mouseEnterDelay={0.5}
+                content={(
+                  <div className="doc">
+                    <div>
+                      <p>通过两个点创建一个立方体, 确定粒子能够被创建的区域</p>
+                      <img src={Container0}/>
+                    </div>
+                    <div>
+                      <p>将两个顶点的Y值都设为一样时可以创建出2D模型</p>
+                      <img src={Container1}/>
+                    </div>
+                  </div>
+                )}
+                title="容器设置"
+              >
+                geometry.defintion (容器设置)
+              </Popover>
+            }
             key="defintion"
           >
             <div className="defintion-item args-item">
               <span className="args-item-name">dp:</span>
-              <InputNumber
-                className="args-item-value"
-                value={store.container.dp}
-                onChange={store.onChangeContainerDp.bind(store)}
-              />
+              <Tooltip
+                title="粒子间距"
+                trigger={['focus']}
+              >
+                <InputNumber
+                  className="args-item-value"
+                  value={store.container.dp}
+                  onChange={store.onChangeContainerDp.bind(store)}
+                />
+              </Tooltip>
             </div>
             <div className="defintion-item args-item">
               <span className="args-item-name">min:</span>
@@ -201,7 +257,7 @@ class Args extends Component {
             header="geometry.commands.mainlist (物件设置)"
             key="mainlist"
           >
-            { store.mainList.map(this.renderMainList) }
+            {store.mainList.map(this.renderMainList)}
             <ButtonGroup if={state.showAdd}>
               <Button
                 type="danger"
@@ -235,17 +291,17 @@ class Args extends Component {
               key={arg.name}
               className={"args-item"}
             >
-              <p className="args-item-name">{arg.displayName || arg.name}:</p>
+              {genConDocs(arg)}
               <div
                 if={Array.isArray(toJS(arg.value))}
                 className="args-item-values"
               >
                 <div
-                  if={arg.options}
+                  if={arg.displayOptions || arg.options}
                   for={(v, j) in arg.value}
                   key={arg.options[j]}
                 >
-                  <span>{arg.options[j]}</span>
+                  <span>{(arg.displayOptions || arg.options)[j]}</span>
                   <InputNumber
                     value={v}
                     onChange={store.onChangeCon.bind(store, i, j)}
