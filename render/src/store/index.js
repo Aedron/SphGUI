@@ -37,7 +37,7 @@ class Store {
   /*
   *** view
    */
-  @observable viewIndex = 1;
+  @observable viewIndex = 0;
   @action toggleView = (view) => {
     if ((view === 2 || view === 'editor') && !this.xmlContent) {
       return this.selectXML();
@@ -51,7 +51,7 @@ class Store {
   @computed get view() {
     return this.views[this.viewIndex];
   }
-  views = ['model', 'args', 'editor', 'conf', 'about'];
+  views = ['model', 'args', 'editor', 'about'];
   /*
   *** FileType
    */

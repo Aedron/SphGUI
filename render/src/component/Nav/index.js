@@ -27,7 +27,7 @@ class Nav extends Component {
     ["模型生成", Model, ModelActive, 'model'],
     ["算例生成", Trans, TransActive, 'args'],
     ["XML编辑", Editor, EditorActive, 'editor'],
-    ["首选项", Conf, ConfActive, 'conf'],
+    // ["首选项", Conf, ConfActive, 'conf'],
     ["关于信息", About, AboutActive, 'about']
   ];
   render() {
